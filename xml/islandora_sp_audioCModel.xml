@@ -72,7 +72,7 @@ xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/
     <datastream dsid="TN"></datastream>
   </datastreams>
   <ingest_form dsid="QDC" page="2">
-    <form_builder_method class="QtFormBuilder" file="plugins/QtFormBuilder.php" handler="handleQDCForm" method="buildQDCForm" module=""></form_builder_method>
+    <form_builder_method class="AudioFormBuilder" file="audio_formbuilder.inc" handler="handleQDCForm" method="buildQDCForm" module="islandora_audio_sp"></form_builder_method>
     <form_elements>
       <element label="Title/Caption/Media Name" name="dc:title" required="true" type="textfield">
         <description>The name given to the file</description>

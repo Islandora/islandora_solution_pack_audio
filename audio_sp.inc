@@ -8,15 +8,15 @@ class Exiftool {
   private $pid = NULL;
   private $item = NULL;
 
-  function __construct($pid) {
-    //drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
-    $this->pid = $pid;
+  function __construct($pid = null) {
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
-    $this->item = new Fedora_Item($this->pid);
+    if (!empty($pid)) {
+      $this->pid = $pid;
+      $this->item = new Fedora_Item($pid);
+    }
   }
 
   function extractMetadata($parameterArray, $dsid, $file, $file_ext) {
-    $system = getenv('System');
     $file_suffix = '_' . $dsid . '.xml';
     $returnValue = TRUE;
     $output = array();
@@ -73,11 +73,13 @@ class AudioManipulation {
     $return_value = TRUE;
 
     $output = array();
+    $command_string = "lame -V5 --vbr-new '${file}' '${file}.mp3'";
 
-    exec('lame "' . $file . $file . 'mp3' . '" -V5 --vbr-new "', $output, $returnValue);
+    exec($command_string, $output, $returnValue);
 
     if ($returnValue == '0') {
-      $_SESSION['fedora_ingest_files']["PROXY_MP3"] = $file . 'mp3';
+      $_SESSION['fedora_ingest_files']["PROXY_MP3"] = $file . '.mp3';
+      return true;
     }
     else {
       ObjectHelper::warnIfMisconfigured('LAME'); /// need to add this to ObjectHelper
@@ -97,12 +99,13 @@ class SWFAudioPlayer {
   function showMP3() {
 
     global $base_url;
-    $swfURL = $base_url . base_path() . 'fedora/repository/' . $this->pid . '/PROXY_MP3/MP3.mp3';
-    $swfImageURL = $base_url . base_path() . 'fedora/repository/' . $this->pid . '/TN/tn.jpg';
+    $swfURL = $base_url .  '/fedora/repository/' . $this->pid . '/PROXY_MP3/MP3.mp3';
+    $swfImageURL = $base_url .  '/fedora/repository/' . $this->pid . '/TN/tn.jpg';
+
 
     //PROXY_MP3 is the datastream id
     $path = drupal_get_path('module', 'Fedora_Repository');
-    $fullPath = base_path() . $path;
+
     $content = "";
     $pathTojs = "/sites/all/libraries/mediaplayer4/jwplayer.js";
     drupal_add_js("$pathTojs");
