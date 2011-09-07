@@ -1,0 +1,49 @@
+<?php
+
+// $Id$
+
+
+function islandora_audio_sp_required_fedora_objects() {
+
+
+  $module_path = drupal_get_path('module', 'islandora_audio_sp');
+
+  // array( 'path-to-foxml-file', 'pid', 'dsid', 'path-to-datastream-file', int dsversion, boolean required)
+  // make database insertions here.
+
+
+  return array(
+    'islandora_audio_sp' => array(
+      'module' => 'slandora_audio_sp',
+      'title' => 'Islandora Audio Solution Pack',
+      'objects' => array(
+        array(
+          'foxml_file' => "$module_path/xml/islandora_sp_audioCModel.xml",
+          'pid' => 'islandora:sp-audioCModel',
+          'dsid' => NULL,
+          'datastream_file' => NULL,
+          'dsversion' => NULL,
+        ),
+
+        array(
+          'pid' => 'islandora:audio_collection',
+          'label' => 'Audio Collection',
+          'cmodel' => 'islandora:collectionCModel',
+          'parent' => 'islandora:top',
+          'datastreams' => array(
+            array(
+              'dsid' => 'COLLECTION_POLICY',
+              'datastream_file' => "$module_path/xml/audio_collection_policy.xml",
+            ),
+            array(
+              'dsid' => 'TN',
+              'datastream_file' => "$module_path/images/audio-TN.jpg",
+              'mimetype' => 'image/png',
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
