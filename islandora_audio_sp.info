@@ -2,6 +2,7 @@
 name = Islandora Audio Solution Pack
 description = Islandora configurations for persisting and retrieving audio files
 dependencies[] = fedora_repository
+dependencies[] = swftools
 package = Islandora Solution Pack
 version = 6.1
 core = 6.x
