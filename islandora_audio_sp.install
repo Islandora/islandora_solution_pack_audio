@@ -7,7 +7,7 @@ function islandora_audio_sp_requirements($phase) {
 
  
     $requirements['fedora-lame']['title'] = t("Lame in \$PATH");
-    $result = exec('lame');
+    $result = exec('which lame');
     if (!$result) {
       $requirements['fedora-lame']['value'] = t('Not in $PATH');
       $requirements['fedora-lame']['description'] = t('Islandora will not be able to process audio. Click <a href="http://lame.sourceforge.net/download.php">here</a> for installation instructions');
