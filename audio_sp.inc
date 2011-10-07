@@ -79,7 +79,9 @@ class AudioManipulation {
 
     if ($returnValue == '0') {
       $_SESSION['fedora_ingest_files']["PROXY_MP3"] = $file . '.mp3';
-      $thumbnail = drupal_get_path('module', 'islandora_audio_sp') . '/images/audio-TN.jpg';
+      $stored_thumbnail = drupal_get_path('module', 'islandora_audio_sp') . '/images/audio-TN.jpg';
+      file_copy($stored_thumbnail, file_directory_path());
+      $thumbnail = file_directory_path() . '/' . 'audio-TN.jpg';
       $_SESSION['fedora_ingest_files']["TN"] = $thumbnail;
       return true;
     }
