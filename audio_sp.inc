@@ -9,7 +9,7 @@ class Exiftool {
   private $item = NULL;
 
   function __construct($pid = null) {
-    module_load_include('inc', 'fedora_repository', 'api/fedora_item');
+    module_load_include('inc', 'islandora_repository', 'api/fedora_item');
     if (!empty($pid)) {
       $this->pid = $pid;
       $this->item = new Fedora_Item($pid);
@@ -65,7 +65,7 @@ class Exiftool {
 class AudioManipulation {
 
   function AudioManipulation() {
-    module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+    module_load_include('inc', 'islandora_repository', 'ObjectHelper');
   }
 
   function createMP3($parameterArray = NULL, $dsid, $file, $file_ext) {
