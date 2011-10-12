@@ -1,21 +1,32 @@
 <?php
 
+/**
+ * @file 
+ * Audio form builder classes
+ */
 module_load_include('inc', 'fedora_repository', 'plugins/FormBuilder');
-/*
- * implements methods from content model ingest form xml
+
+/**
+ * AudioFormBuilder class
+ * Implements methods from content model ingest form xml 
  * builds a dc metadata form
  */
-
 class AudioFormBuilder extends FormBuilder {
 
+  /**
+   * Constructor
+   */
   function AudioFormBuilder() {
     module_load_include('inc', 'Fedora_Repository', 'plugins/FormBuilder');
   }
 
-  /*
-   * method overrides method in FormBuilder.
+  /**
+   * Override Create Fedora Data Stream
+   * @global type $base_url
+   * @param type $form_values
+   * @param type $dom
+   * @param type $rootElement 
    */
-
   function createFedoraDataStreams($form_values, &$dom, &$rootElement) {
     module_load_include('inc', 'fedora_repository', 'MimeClass');
     global $base_url;

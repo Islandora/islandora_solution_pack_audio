@@ -1,4 +1,4 @@
-; $Id$ 
+; $Id$
 name = Islandora Audio Solution Pack
 description = Islandora configurations for persisting and retrieving audio files
 dependencies[] = fedora_repository
