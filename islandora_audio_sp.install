@@ -1,24 +1,33 @@
 <?php
 
+/**
+ * @file 
+ * Islandora audio solution pack install
+ */
+
+/**
+ * Islandora audio solution pack requirements
+ * @global type $base_url
+ * @param type $phase
+ * @return string 
+ */
 function islandora_audio_sp_requirements($phase) {
   global $base_url;
 
   $requirements = array();
 
- 
-    $requirements['fedora-lame']['title'] = t("Lame in \$PATH");
-    $result = exec('which lame');
-    if (!$result) {
-      $requirements['fedora-lame']['value'] = t('Not in $PATH');
-      $requirements['fedora-lame']['description'] = t('Islandora will not be able to process audio. Click <a href="http://lame.sourceforge.net/download.php">here</a> for installation instructions');
-      $requirements['fedora-lame']['severity'] = REQUIREMENT_WARNING;
-    }
-    else {
-      $requirements['fedora-lame']['value'] = t("Available");
-      $requirements['fedora-lame']['severity'] = REQUIREMENT_OK;
-    }
- 
 
+  $requirements['fedora-lame']['title'] = t("Lame in \$PATH");
+  $result = exec('which lame');
+  if (!$result) {
+    $requirements['fedora-lame']['value'] = t('Not in $PATH');
+    $requirements['fedora-lame']['description'] = t('Islandora will not be able to process audio. Click <a href="http://lame.sourceforge.net/download.php">here</a> for installation instructions');
+    $requirements['fedora-lame']['severity'] = REQUIREMENT_WARNING;
+  }
+  else {
+    $requirements['fedora-lame']['value'] = t("Available");
+    $requirements['fedora-lame']['severity'] = REQUIREMENT_OK;
+  }
 
   return $requirements;
 }
