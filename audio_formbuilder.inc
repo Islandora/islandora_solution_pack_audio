@@ -31,7 +31,7 @@ class AudioFormBuilder extends FormBuilder {
     module_load_include('inc', 'fedora_repository', 'MimeClass');
     global $base_url;
     $mimetype = new MimeClass();
-    $server = null;
+    $server = NULL;
     $file = $form_values['ingest-file-location'];
     $dformat = $mimetype->getType($file);
     //$fileUrl = 'http://'.$_SERVER['HTTP_HOST'].$file;

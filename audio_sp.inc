@@ -17,7 +17,7 @@ class Exiftool {
    * Constructor
    * @param type $pid 
    */
-  function __construct($pid = null) {
+  function __construct($pid = NULL) {
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
     if (!empty($pid)) {
       $this->pid = $pid;
@@ -66,7 +66,7 @@ class Exiftool {
               $output .= '<li><b>' . $name . '</b>:  ' . $value . ' </li>';
             }
           }
-          $output.='</ul></div>';
+          $output .= '</ul></div>';
 
           $fieldset = array(
             '#title' => t("!text", array('!text' => 'Technical Metadata')),
