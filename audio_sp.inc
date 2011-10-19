@@ -92,7 +92,7 @@ class AudioManipulation {
    * Constructor
    */
   function AudioManipulation() {
-    module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+    module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
   }
 
   /**
