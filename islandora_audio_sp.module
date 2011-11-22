@@ -7,6 +7,7 @@ function islandora_audio_sp_required_fedora_objects() {
 
 
   $module_path = drupal_get_path('module', 'islandora_audio_sp');
+  $islandora_path = drupal_get_path('module', 'fedoroa_repository');
   $form_name = 'Islandora Audio MODS Form';
   $form_xml = file_get_contents("$module_path/xml/mods_audio.xml");
   solution_pack_add_form($form_name, $form_xml);
@@ -33,11 +34,11 @@ function islandora_audio_sp_required_fedora_objects() {
           'datastreams' => array(
             array(
               'dsid' => 'COLLECTION_POLICY',
-              'datastream_file' => "$module_path/xml/audio_collection_policy.xml",
+              'datastream_file' => "$islandora_path/xml/audio_collection_policy.xml",
             ),
             array(
               'dsid' => 'TN',
-              'datastream_file' => "$module_path/images/audio-TN.jpg",
+              'datastream_file' => "$module_path/images/Crystal_Clear_filesystem_folder_grey.png",
               'mimetype' => 'image/png',
             ),
           ),
