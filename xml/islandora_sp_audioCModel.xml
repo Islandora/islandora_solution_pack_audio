@@ -3,169 +3,183 @@
 xmlns:foxml="info:fedora/fedora-system:def/foxml#"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/definitions/1/0/foxml1-1.xsd">
-<foxml:objectProperties>
-<foxml:property NAME="info:fedora/fedora-system:def/model#state" VALUE="Active"/>
-<foxml:property NAME="info:fedora/fedora-system:def/model#label" VALUE="Audio Content Model"/>
-<foxml:property NAME="info:fedora/fedora-system:def/model#ownerId" VALUE="fedoraAdmin"/>
-<foxml:property NAME="info:fedora/fedora-system:def/model#createdDate" VALUE="2010-01-26T21:29:20.416Z"/>
-<foxml:property NAME="info:fedora/fedora-system:def/view#lastModifiedDate" VALUE="2011-06-17T16:37:06.901Z"/>
-</foxml:objectProperties>
-<foxml:datastream ID="DC" STATE="A" CONTROL_GROUP="X" VERSIONABLE="true">
-<foxml:datastreamVersion ID="DC1.0" LABEL="Dublin Core Record for this object" CREATED="2010-01-26T21:29:20.416Z" MIMETYPE="text/xml" FORMAT_URI="http://www.openarchives.org/OAI/2.0/oai_dc/" SIZE="387">
-<foxml:xmlContent>
-<oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
-  <dc:title>Audio Content Model</dc:title>
-  <dc:identifier>islandora:sp-audioCModel</dc:identifier>
-</oai_dc:dc>
-</foxml:xmlContent>
-</foxml:datastreamVersion>
-</foxml:datastream>
-<foxml:datastream ID="RELS-EXT" STATE="A" CONTROL_GROUP="X" VERSIONABLE="true">
-<foxml:datastreamVersion ID="RELS-EXT.0" LABEL="RELS-EXT" CREATED="2011-04-18T01:02:46.107Z" MIMETYPE="text/xml" SIZE="288">
-<foxml:xmlContent>
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-  <rdf:Description rdf:about="info:fedora/islandora:sp-audioCModel">
-    <hasModel xmlns="info:fedora/fedora-system:def/model#" rdf:resource="info:fedora/fedora-system:ContentModel-3.0"></hasModel>
-  </rdf:Description>
-</rdf:RDF>
-</foxml:xmlContent>
-</foxml:datastreamVersion>
-</foxml:datastream>
-<foxml:datastream ID="ISLANDORACM" STATE="A" CONTROL_GROUP="X" VERSIONABLE="true">
-<foxml:datastreamVersion ID="ISLANDORACM.0" LABEL="Islandora Content Model for Audio" CREATED="2011-05-31T14:32:57.656Z" MIMETYPE="text/xml" SIZE="44664">
-<foxml:xmlContent>
-<content_model xmlns="http://www.islandora.ca" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="audio content model" xsi:schemaLocation="http://www.islandora.ca http://localhost/islandoracm.xsd">
-  <mimetypes>
-    <type>audio/mp3</type>
-    <type>audio/mpeg</type>
-    <type>audio/x-wav</type>
-    <type>audio/vnd.wave</type>
-  </mimetypes>
-  <ingest_rules>
-    <rule>
-      <applies_to>audio/mp3</applies_to>
-      <applies_to>audio/mpeg</applies_to>
-      <applies_to>audio/x-wav</applies_to>
-      <applies_to>audio/vnd.wave</applies_to>
-      <applies_to>audio/ogg</applies_to>
-      <applies_to>audio/x-aiff</applies_to>
-      <ingest_methods>
-        <ingest_method class="Exiftool" dsid="OBJ_EXIFTOOL" file="audio_sp.inc" method="extractMetadata" modified_files_ext="" module="islandora_audio_sp"></ingest_method>
-      </ingest_methods>
-    </rule>
-    <rule>
-      <applies_to>audio/x-wav</applies_to>
-      <applies_to>audio/vnd.wave</applies_to>
-      <applies_to>audio/mp3</applies_to>
-      <applies_to>audio/mpeg</applies_to>
-      <ingest_methods>
-        <ingest_method class="AudioManipulation" dsid="PROXY_MP3" file="audio_sp.inc" method="createMP3" modified_files_ext="mp3" module="islandora_audio_sp"></ingest_method>
-      </ingest_methods>
-    </rule>
-  </ingest_rules>
-  <datastreams>
-    <datastream dsid="OBJ"></datastream>
-    <datastream dsid="PROXY_MP3">
-      <display_method class="SWFAudioPlayer" file="audio_sp.inc" method="showMP3" module="islandora_audio_sp"></display_method>
-    </datastream>
-    <datastream dsid="OBJ_EXIFTOOL"></datastream>
-    <datastream dsid="TN"></datastream>
-  </datastreams>
-  <ingest_form dsid="QDC" page="2">
-    <form_builder_method class="AudioFormBuilder" file="audio_formbuilder.inc" handler="handleQDCForm" method="buildQDCForm" module="islandora_audio_sp"></form_builder_method>
-    <form_elements>
-      <element label="Title/Caption/Media Name" name="dc:title" required="true" type="textfield">
-        <description>The name given to the file</description>
-      </element>
-      <element label="Creator/" name="dc:creator" type="textfield">
-        <description>An entity primarily responsible for making the
+  <foxml:objectProperties>
+    <foxml:property NAME="info:fedora/fedora-system:def/model#state" VALUE="Active"/>
+    <foxml:property NAME="info:fedora/fedora-system:def/model#label" VALUE="Audio Content Model"/>
+    <foxml:property NAME="info:fedora/fedora-system:def/model#ownerId" VALUE="fedoraAdmin"/>
+    <foxml:property NAME="info:fedora/fedora-system:def/model#createdDate" VALUE="2010-01-26T21:29:20.416Z"/>
+    <foxml:property NAME="info:fedora/fedora-system:def/view#lastModifiedDate" VALUE="2011-06-17T16:37:06.901Z"/>
+  </foxml:objectProperties>
+  <foxml:datastream ID="DC" STATE="A" CONTROL_GROUP="X" VERSIONABLE="true">
+    <foxml:datastreamVersion ID="DC1.0" LABEL="Dublin Core Record for this object" CREATED="2010-01-26T21:29:20.416Z" MIMETYPE="text/xml" FORMAT_URI="http://www.openarchives.org/OAI/2.0/oai_dc/" SIZE="387">
+      <foxml:xmlContent>
+        <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+          <dc:title>Audio Content Model</dc:title>
+          <dc:identifier>islandora:sp-audioCModel</dc:identifier>
+        </oai_dc:dc>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream ID="RELS-EXT" STATE="A" CONTROL_GROUP="X" VERSIONABLE="true">
+    <foxml:datastreamVersion ID="RELS-EXT.0" LABEL="RELS-EXT" CREATED="2011-04-18T01:02:46.107Z" MIMETYPE="text/xml" SIZE="288">
+      <foxml:xmlContent>
+        <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+          <rdf:Description rdf:about="info:fedora/islandora:sp-audioCModel">
+            <hasModel xmlns="info:fedora/fedora-system:def/model#" rdf:resource="info:fedora/fedora-system:ContentModel-3.0"></hasModel>
+          </rdf:Description>
+        </rdf:RDF>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
+  <foxml:datastream ID="ISLANDORACM" STATE="A" CONTROL_GROUP="X" VERSIONABLE="true">
+    <foxml:datastreamVersion ID="ISLANDORACM.0" LABEL="Islandora Content Model for Audio" CREATED="2011-05-31T14:32:57.656Z" MIMETYPE="text/xml" SIZE="44664">
+      <foxml:xmlContent>
+        <content_model xmlns="http://www.islandora.ca" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="audio content model" xsi:schemaLocation="http://www.islandora.ca http://localhost/islandoracm.xsd">
+          <mimetypes>
+            <type>audio/mp3</type>
+            <type>audio/mpeg</type>
+            <type>audio/x-wav</type>
+            <type>audio/vnd.wave</type>
+          </mimetypes>
+          <ingest_rules>
+            <rule>
+              <applies_to>audio/mp3</applies_to>
+              <applies_to>audio/mpeg</applies_to>
+              <applies_to>audio/x-wav</applies_to>
+              <applies_to>audio/vnd.wave</applies_to>
+              <applies_to>audio/ogg</applies_to>
+              <applies_to>audio/aiff</applies_to>
+              <applies_to>audio/x-aiff</applies_to>
+              <ingest_methods>
+                <ingest_method class="Exiftool" dsid="OBJ_EXIFTOOL" file="audio_sp.inc" method="extractMetadata" modified_files_ext="" module="islandora_audio_sp"></ingest_method>
+              </ingest_methods>
+            </rule>
+            <rule>
+              <applies_to>audio/x-wav</applies_to>
+              <applies_to>audio/vnd.wave</applies_to>
+              <applies_to>audio/mp3</applies_to>
+              <applies_to>audio/mpeg</applies_to>
+              <applies_to>audio/aiff</applies_to>
+              <applies_to>audio/x-aiff</applies_to>
+              <ingest_methods>
+                <ingest_method class="AudioManipulation" dsid="PROXY_MP3" file="audio_sp.inc" method="createMP3" modified_files_ext="mp3" module="islandora_audio_sp"></ingest_method>
+              </ingest_methods>
+            </rule>
+          </ingest_rules>
+          <datastreams>
+            <datastream dsid="OBJ"></datastream>
+            <datastream dsid="PROXY_MP3">
+              <display_method class="SWFAudioPlayer" file="audio_sp.inc" method="showMP3" module="islandora_audio_sp"></display_method>
+            </datastream>
+            <datastream dsid="OBJ_EXIFTOOL"></datastream>
+            <datastream dsid="TN"></datastream>
+          </datastreams>
+          <ingest_form dsid="QDC" page="2">
+            <form_builder_method class="AudioFormBuilder" file="audio_formbuilder.inc" handler="handleQDCForm" method="buildQDCForm" module="islandora_audio_sp"></form_builder_method>
+            <form_elements>
+              <element label="Title/Caption/Media Name" name="dc:title" required="true" type="textfield">
+                <description>The name given to the file</description>
+              </element>
+              <element label="Creator/" name="dc:creator" type="textfield">
+                <description>An entity primarily responsible for making the
                     content of the resource such as a person, organization or
-                    service.</description>
-      </element>
-      <element label="Subject" name="dc:subject" type="select">
-        <description>An entity primarily responsible for making the
+                    service.
+                </description>
+              </element>
+              <element label="Subject" name="dc:subject" type="select">
+                <description>An entity primarily responsible for making the
                     content of the resource such as a person, organization or
-                    service.</description>
-        <authoritative_list>
-          <item>home recording</item>
-          <item>meeting</item>
-          <item>presentation</item>
-          <item>sound</item>
-        </authoritative_list>
-      </element>
-      <element label="Description of Media" name="dc:description" required="true" type="textarea">
-        <description>Examples include an abstract, table of
+                    service.
+                </description>
+                <authoritative_list>
+                  <item>home recording</item>
+                  <item>meeting</item>
+                  <item>presentation</item>
+                  <item>sound</item>
+                </authoritative_list>
+              </element>
+              <element label="Description of Media" name="dc:description" required="true" type="textarea">
+                <description>Examples include an abstract, table of
                     contents, or free-text account of the content of the
-                    resource.</description>
-      </element>
-      <element label="Publisher" name="dc:publisher" type="textfield">
-        <description>An entity, (including persons, organizations,
+                    resource.
+                </description>
+              </element>
+              <element label="Publisher" name="dc:publisher" type="textfield">
+                <description>An entity, (including persons, organizations,
                     or services), responsible for making the resource
-                    available.</description>
-      </element>
-      <element label="Contributor" name="dc:contributor" type="textfield">
-        <description>An entity responsible for contributing to the
+                    available.
+                </description>
+              </element>
+              <element label="Contributor" name="dc:contributor" type="textfield">
+                <description>An entity responsible for contributing to the
                     content of the resource such as a person, organization or
-                    service.</description>
-      </element>
-      <element label="Date" name="dc:date" type="textfield">
-        <description>Temporal scope of the content if known. Date
+                    service.
+                </description>
+              </element>
+              <element label="Date" name="dc:date" type="textfield">
+                <description>Temporal scope of the content if known. Date
                     format is YYYY-MM-DD (e.g. 1890,1910-10,or
-                    2007-10-23)</description>
-      </element>
-      <element label="Resource Type" name="dc:type" type="select">
-        <description>Genre of the content of the resource. Examples
+                    2007-10-23)
+                </description>
+              </element>
+              <element label="Resource Type" name="dc:type" type="select">
+                <description>Genre of the content of the resource. Examples
                     include: home page, novel, poem, working paper, technical
-         report, essay, dictionary.</description>
-        <authoritative_list>
-          <item>none</item>
-          <item>video</item>
-          <item>event</item>
-          <item>image</item>
-          <item>interactive resource</item>
-          <item>model</item>
-          <item>party</item>
-          <item>physical object</item>
-          <item>place</item>
-          <item>service</item>
-          <item>software</item>
-          <item>sound</item>
-          <item>text</item>
-        </authoritative_list>
-      </element>
-      <element label="Source" name="dc:source" type="textfield">
-        <description>A reference to a resource from which the
-                    present resource is derived.</description>
-      </element>
-      <element label="Identifier" name="dc:identifier" type="textfield">
-        <description>A unique reference to the resource; In this
+         report, essay, dictionary.
+                </description>
+                <authoritative_list>
+                  <item>none</item>
+                  <item>video</item>
+                  <item>event</item>
+                  <item>image</item>
+                  <item>interactive resource</item>
+                  <item>model</item>
+                  <item>party</item>
+                  <item>physical object</item>
+                  <item>place</item>
+                  <item>service</item>
+                  <item>software</item>
+                  <item>sound</item>
+                  <item>text</item>
+                </authoritative_list>
+              </element>
+              <element label="Source" name="dc:source" type="textfield">
+                <description>A reference to a resource from which the
+                    present resource is derived.
+                </description>
+              </element>
+              <element label="Identifier" name="dc:identifier" type="textfield">
+                <description>A unique reference to the resource; In this
                     instance, the accession number or collection
-                    number.</description>
-      </element>
-      <element label="Language" name="dc:language" type="select">
-        <description>The language of the intellectual content of
-                    the resource.</description>
-        <authoritative_list>
-          <item field="eng">English</item>
-          <item field="fre">French</item>
-        </authoritative_list>
-      </element>
-      <element label="Relation" name="dc:relation" type="textfield">
-        <description>Reference to a related resource.</description>
-      </element>
-      <element label="Rights Management" name="dc:rights" type="textarea">
-        <description>Information about intellectual property
+                    number.
+                </description>
+              </element>
+              <element label="Language" name="dc:language" type="select">
+                <description>The language of the intellectual content of
+                    the resource.
+                </description>
+                <authoritative_list>
+                  <item field="eng">English</item>
+                  <item field="fre">French</item>
+                </authoritative_list>
+              </element>
+              <element label="Relation" name="dc:relation" type="textfield">
+                <description>Reference to a related resource.</description>
+              </element>
+              <element label="Rights Management" name="dc:rights" type="textarea">
+                <description>Information about intellectual property
                     rights, copyright, and various property
-                    rights.</description>
-      </element>
-    </form_elements>
-  </ingest_form>
-  <forms>
-    <form class="" dsid="" file="" module="" name="">
-       </form>
-  </forms>
-</content_model>
-</foxml:xmlContent>
-</foxml:datastreamVersion>
-</foxml:datastream>
+                    rights.
+                </description>
+              </element>
+            </form_elements>
+          </ingest_form>
+          <forms>
+            <form class="" dsid="" file="" module="" name="">
+            </form>
+          </forms>
+        </content_model>
+      </foxml:xmlContent>
+    </foxml:datastreamVersion>
+  </foxml:datastream>
 </foxml:digitalObject>
