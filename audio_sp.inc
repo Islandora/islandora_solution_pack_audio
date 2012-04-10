@@ -92,7 +92,7 @@ class AudioManipulation {
    * Constructor
    */
   function AudioManipulation() {
-    module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
+    module_load_include('inc', 'fedora_repository', 'ObjectHelper');
   }
 
   /**
@@ -140,7 +140,11 @@ class SWFAudioPlayer {
    * @param type $pid 
    */
   function __construct($pid) {
-    $this->pid = $pid;
+    module_load_include('inc', 'fedora_repository', 'api/fedora_item');
+    if (!empty($pid)) {
+      $this->pid = $pid;
+      $this->item = new Fedora_Item($pid);
+    }
   }
 
   /**
@@ -176,7 +180,7 @@ var swfVersionStr = "10.0.0";
 var flashvars = { file:escape("$swfURL"),image:escape("$swfImageURL"),autostart:'FALSE' };
 var params = { allowfullscreen:'FALSE', allowscriptaccess:'FALSE' };
 var attributes = { id:'AudioViewer', name:'AudioViewer' };
-swfobject.embedSWF('/sites/all/libraries/mediaplayer4/player.swf','flashContent','400','200','9.0.115','FALSE',flashvars, params, attributes);
+swfobject.embedSWF('/sites/all/libraries/mediaplayer4/player.swf','flashContent','400','200','9.0.115','false',flashvars, params, attributes);
 swfobject.createCSS("#flashContent", "display:block;text-align:left;");
 ENDJS;
     drupal_add_js($js_string, 'inline', 'header');
@@ -186,7 +190,13 @@ ENDJS;
       '#collapsible' => TRUE,
       '#collapsed' => FALSE,
       '#value' => $content);
-    return theme('fieldset', $collection_fieldset);
+    $content = theme('fieldset', $collection_fieldset);
+    $tabset['pages_tab'] = array(
+      '#type' => 'tabpage',
+      '#title' => $this->item->objectProfile->objLabel,
+      '#content' => $content,
+    );
+    return $tabset;
   }
 
 }
