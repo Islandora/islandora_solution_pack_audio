@@ -177,8 +177,8 @@ class SWFAudioPlayer {
     $js_string = <<<ENDJS
 
 var swfVersionStr = "10.0.0";
-var flashvars = { file:escape("$swfURL"),image:escape("$swfImageURL"),autostart:'FALSE' };
-var params = { allowfullscreen:'FALSE', allowscriptaccess:'FALSE' };
+var flashvars = { file:escape("$swfURL"),image:escape("$swfImageURL"),autostart:'false' };
+var params = { allowfullscreen:'false', allowscriptaccess:'false' };
 var attributes = { id:'AudioViewer', name:'AudioViewer' };
 swfobject.embedSWF('/sites/all/libraries/mediaplayer4/player.swf','flashContent','400','200','9.0.115','false',flashvars, params, attributes);
 swfobject.createCSS("#flashContent", "display:block;text-align:left;");
