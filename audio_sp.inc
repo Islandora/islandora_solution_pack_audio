@@ -1,14 +1,23 @@
-
 <?php
 
-// $Id$
+/**
+ * @file
+ * Audio solution pack classes
+ */
 
+/**
+ * Exiftool classes
+ */
 class Exiftool {
 
   private $pid = NULL;
   private $item = NULL;
 
-  function __construct($pid = null) {
+  /**
+   * Constructor
+   * @param type $pid 
+   */
+  function __construct($pid = NULL) {
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
     if (!empty($pid)) {
       $this->pid = $pid;
@@ -16,6 +25,14 @@ class Exiftool {
     }
   }
 
+  /**
+   * Extract Metadata
+   * @param type $parameterArray
+   * @param type $dsid
+   * @param type $file
+   * @param type $file_ext
+   * @return type 
+   */
   function extractMetadata($parameterArray, $dsid, $file, $file_ext) {
     $file_suffix = '_' . $dsid . '.xml';
     $returnValue = TRUE;
@@ -26,6 +43,10 @@ class Exiftool {
     return TRUE;
   }
 
+  /**
+   * Display Metadata
+   * @return type 
+   */
   function displayMetadata() {
     $output = '';
     $exif = $this->item->get_datastream_dissemination('EXIF');
@@ -45,7 +66,7 @@ class Exiftool {
               $output .= '<li><b>' . $name . '</b>:  ' . $value . ' </li>';
             }
           }
-          $output.='</ul></div>';
+          $output .= '</ul></div>';
 
           $fieldset = array(
             '#title' => t("!text", array('!text' => 'Technical Metadata')),
@@ -62,12 +83,27 @@ class Exiftool {
 
 }
 
+/**
+ * Audio Manipulation
+ */
 class AudioManipulation {
 
+  /**
+   * Constructor
+   */
   function AudioManipulation() {
-    module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+    module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
   }
 
+  /**
+   * Create MP3
+   * @param type $parameterArray
+   * @param type $dsid
+   * @param type file
+   * @param type $file
+   * @param type $file_ext
+   * @return type 
+   */
   function createMP3($parameterArray = NULL, $dsid, $file, $file_ext) {
     $file_suffix = "_$dsid.$file_ext";
     $return_value = TRUE;
@@ -83,7 +119,7 @@ class AudioManipulation {
       file_copy($stored_thumbnail, file_directory_path());
       $thumbnail = file_directory_path() . '/' . 'audio-TN.jpg';
       $_SESSION['fedora_ingest_files']["TN"] = $thumbnail;
-      return true;
+      return TRUE;
     }
     else {
       ObjectHelper::warnIfMisconfigured('LAME'); /// need to add this to ObjectHelper
@@ -92,10 +128,17 @@ class AudioManipulation {
 
 }
 
+/**
+ * SWFAudio Player
+ */
 class SWFAudioPlayer {
 
   private $pid = NULL;
 
+  /**
+   * Constructor
+   * @param type $pid 
+   */
   function __construct($pid) {
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
     if (!empty($pid)) {
@@ -104,12 +147,16 @@ class SWFAudioPlayer {
     }
   }
 
+  /**
+   * Show MP3
+   * @global type $base_url
+   * @return type 
+   */
   function showMP3() {
 
     global $base_url;
     $swfURL = $base_url . '/fedora/repository/' . $this->pid . '/PROXY_MP3/MP3.mp3';
     $swfImageURL = $base_url . '/fedora/repository/' . $this->pid . '/TN/tn.jpg';
-
 
     //PROXY_MP3 is the datastream id
     $path = drupal_get_path('module', 'Fedora_Repository');
@@ -130,10 +177,10 @@ class SWFAudioPlayer {
     $js_string = <<<ENDJS
 
 var swfVersionStr = "10.0.0";
-var flashvars = { file:escape("$swfURL"),image:escape("$swfImageURL"),autostart:'false' };
-var params = { allowfullscreen:'false', allowscriptaccess:'false' };
+var flashvars = { file:escape("$swfURL"),image:escape("$swfImageURL"),autostart:'FALSE' };
+var params = { allowfullscreen:'FALSE', allowscriptaccess:'FALSE' };
 var attributes = { id:'AudioViewer', name:'AudioViewer' };
-swfobject.embedSWF('/sites/all/libraries/mediaplayer4/player.swf','flashContent','400','200','9.0.115','false',flashvars, params, attributes);
+swfobject.embedSWF('/sites/all/libraries/mediaplayer4/player.swf','flashContent','400','200','9.0.115','FALSE',flashvars, params, attributes);
 swfobject.createCSS("#flashContent", "display:block;text-align:left;");
 ENDJS;
     drupal_add_js($js_string, 'inline', 'header');
