@@ -97,14 +97,18 @@ class SWFAudioPlayer {
   private $pid = NULL;
 
   function __construct($pid) {
-    $this->pid = $pid;
+    module_load_include('inc', 'fedora_repository', 'api/fedora_item');
+    if (!empty($pid)) {
+      $this->pid = $pid;
+      $this->item = new Fedora_Item($pid);
+    }
   }
 
   function showMP3() {
 
     global $base_url;
-    $swfURL = $base_url .  '/fedora/repository/' . $this->pid . '/PROXY_MP3/MP3.mp3';
-    $swfImageURL = $base_url .  '/fedora/repository/' . $this->pid . '/TN/tn.jpg';
+    $swfURL = $base_url . '/fedora/repository/' . $this->pid . '/PROXY_MP3/MP3.mp3';
+    $swfImageURL = $base_url . '/fedora/repository/' . $this->pid . '/TN/tn.jpg';
 
 
     //PROXY_MP3 is the datastream id
@@ -139,7 +143,13 @@ ENDJS;
       '#collapsible' => TRUE,
       '#collapsed' => FALSE,
       '#value' => $content);
-    return theme('fieldset', $collection_fieldset);
+    $content = theme('fieldset', $collection_fieldset);
+    $tabset['pages_tab'] = array(
+      '#type' => 'tabpage',
+      '#title' => $this->item->objectProfile->objLabel,
+      '#content' => $content,
+    );
+    return $tabset;
   }
 
 }
