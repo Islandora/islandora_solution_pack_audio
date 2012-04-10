@@ -92,7 +92,7 @@ class AudioManipulation {
    * Constructor
    */
   function AudioManipulation() {
-    module_load_include('inc', 'fedora_repository', 'api/ObjectHelper');
+    module_load_include('inc', 'fedora_repository', 'ObjectHelper');
   }
 
   /**
@@ -180,7 +180,7 @@ var swfVersionStr = "10.0.0";
 var flashvars = { file:escape("$swfURL"),image:escape("$swfImageURL"),autostart:'FALSE' };
 var params = { allowfullscreen:'FALSE', allowscriptaccess:'FALSE' };
 var attributes = { id:'AudioViewer', name:'AudioViewer' };
-swfobject.embedSWF('/sites/all/libraries/mediaplayer4/player.swf','flashContent','400','200','9.0.115','FALSE',flashvars, params, attributes);
+swfobject.embedSWF('/sites/all/libraries/mediaplayer4/player.swf','flashContent','400','200','9.0.115','false',flashvars, params, attributes);
 swfobject.createCSS("#flashContent", "display:block;text-align:left;");
 ENDJS;
     drupal_add_js($js_string, 'inline', 'header');
