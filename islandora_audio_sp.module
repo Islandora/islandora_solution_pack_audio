@@ -9,7 +9,7 @@
  * @return type 
  */
 function islandora_audio_sp_required_fedora_objects() {
-
+  module_load_include('inc', 'fedora_repository', 'fedora_repository.solutionpacks');
   $module_path = drupal_get_path('module', 'islandora_audio_sp');
   $islandora_path = drupal_get_path('module', 'fedoroa_repository');
   $form_name = 'Islandora Audio MODS Form';
