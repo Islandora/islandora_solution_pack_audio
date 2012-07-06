@@ -162,7 +162,7 @@ class SWFAudioPlayer {
     $path = drupal_get_path('module', 'Fedora_Repository');
 
     $content = "";
-    $pathTojs = "/sites/all/libraries/mediaplayer4/jwplayer.js";
+    $pathTojs = "sites/all/libraries/mediaplayer4/jwplayer.js";
     drupal_add_js("$pathTojs");
 
     //swfobject.js is being loaded from swftools module but we are adding the path to jwplayer.js as it is needed as well
