@@ -53,10 +53,9 @@ xsi:schemaLocation="info:fedora/fedora-system:def/foxml# http://www.fedora.info/
               <ingest_methods>
                 <ingest_method class="Exiftool" dsid="OBJ_EXIFTOOL" file="audio_sp.inc" method="extractMetadata" modified_files_ext="" module="islandora_audio_sp"></ingest_method>
               </ingest_methods>
-            </rule>
-            <ingest_methods>
-              <ingest_method class="fits" dsid="FITS" file="audio_sp.inc" method="extractMetadata" modified_files_ext="" module="islandora_audio_sp"></ingest_method>
-            </ingest_methods>
+              <ingest_methods>
+                <ingest_method class="fits" dsid="FITS" file="audio_sp.inc" method="extractMetadata" modified_files_ext="" module="islandora_audio_sp"></ingest_method>
+              </ingest_methods>
             </rule>
             <rule>
               <applies_to>audio/x-wav</applies_to>
