@@ -49,7 +49,7 @@
               <applies_to>audio/x-aiff</applies_to>
               <ingest_methods>
                 <ingest_method class="Exiftool" dsid="OBJ_EXIFTOOL" file="audio_sp.inc" method="extractMetadata" modified_files_ext="" module="islandora_audio_sp"/>
-                <ingest_method class="fits" dsid="FITS" file="plugins/fits.inc" method="extractFits" modified_files_ext="" module="fedora_repository"/>
+                <ingest_method class="fits" dsid="TECHMD_FITS" file="plugins/fits.inc" method="extractFits" modified_files_ext="" module="fedora_repository"/>
               </ingest_methods>
             </rule>
             <rule>
@@ -70,7 +70,7 @@
               <display_method class="SWFAudioPlayer" file="audio_sp.inc" method="showMP3" module="islandora_audio_sp"/>
             </datastream>
             <datastream dsid="OBJ_EXIFTOOL"/>
-            <datastream dsid="FITS"/>
+            <datastream dsid="TECHMD_FITS"/>
             <datastream dsid="TN"/>
           </datastreams>
           <ingest_form dsid="QDC" page="2">
