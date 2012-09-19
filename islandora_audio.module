@@ -1,0 +1,220 @@
+<?php
+
+/*
+ * @file
+ * An Islandora module to handle audio cmodels
+ */
+
+/**
+ * Implements hook_menu().
+ * If you need to add secondary tabs to either view or manage you would create a
+ * hook_menu function similar to below.  You would also need to create an access function
+ * to tell islandora when to show your tabs.  There is an example below.
+ */
+function islandora_audio_menu() {
+  $items = array();
+  $items['admin/islandora/audio'] = array(
+    'title' => 'Audio collection',
+    'description' => 'Configure the Audio solution pack.',
+    'page callback' => 'drupal_get_form',
+    'access arguments' => array('administer site configuration'),
+    'page arguments' => array('islandora_audio_admin'),
+    'file' => 'admin/islandora_audio.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+  /* example menu paths
+    $items['islandora/object/%/manage/audio'] = array(
+    'title' => 'Manage Audio Types',
+    'page callback' => 'islandora_audio_manage_object',
+    'page arguments' => array(2),
+    'type' => MENU_LOCAL_TASK,
+    'access callback' => 'islandora_audio_access',
+    'access arguments' => array(2),
+    );
+
+    $items['islandora/object/%/view/audio'] = array(
+    'title' => 'Audio Player 1',
+    'page callback' => 'islandora_audio_view1',
+    'page arguments' => array(2),
+    'type' => MENU_LOCAL_TASK,
+    'access callback' => 'islandora_audio_access',
+    'access arguments' => array(2),
+    );
+    $items['islandora/object/%/view/audio2'] = array(
+    'title' => 'Audio Player 2',
+    'page callback' => 'islandora_audio_view2',
+    'page arguments' => array(2),
+    'type' => MENU_LOCAL_TASK,
+    'access callback' => 'islandora_audio_access',
+    'access arguments' => array(2),
+    ); */
+  return $items;
+}
+
+/**
+ * an example of adding a new managment section to the manage section of islandora.
+ * The islandora_audio_access function determines whether or not to show this
+ * section.
+ *
+ * This is an example function used by hook_menu above.
+ * @param string $object_id
+ * @return string
+ */
+/*
+  function islandora_audio_manage_object($object_id){
+  return 'Audio CModel edit function '.$object_id;
+  } */
+
+/**
+ * /**
+ * An example function used by hook_menu
+ * /
+ * @param type $object_id
+ * @return string
+ */
+/*
+  function islandora_audio_view1($object_id){
+  return 'A view returned by the audio cmodel';
+  } */
+
+/**
+ * An example function needed by this modules hook_menu
+ * @param type $object_id
+ * @return string
+ */
+/*
+  function islandora_audio_view2($object_id){
+  return 'Another view returned by the audio cmodel';
+  } */
+
+function islandora_audio_init() {
+  if (path_is_admin(current_path())) {
+    drupal_add_css(drupal_get_path('module', 'islandora_audio') . '/css/islandora_audio.admin.css');
+  }
+}
+
+/**
+ * Theme registry function
+ * We supply a pattern so we can overide templates at the theme level if needed.
+ * we can append a pid to a template and the new template file will be called (the pids
+ * colon should be replaced with a dash)
+ * @return array
+ */
+function islandora_audio_theme($existing, $type, $theme, $path) {
+  return array(
+    'islandora_audio' => array(
+      'template' => 'theme/islandora-audio',
+      'pattern' => 'islandora_audio__', //we can add pids to the end of this pattern in our preprocess function
+      // and templates will be able to have have a pid appended to the template name to overide a template on a per object basis
+      //an example template would be named islandora-audio--islandora-27.tpl.phps
+      'variables' => array('islandora_object' => NULL),
+    )
+  );
+}
+
+/**
+ * tells the main module what types of objects we support.  This is used to determine whether or not
+ * this module should attempt to respond.
+ * @return array
+ *   array of content model pids that this module supports
+ */
+function islandora_audio_islandora_get_types() {
+  $types = array();
+  $types['islandora:sp_audio'][ISLANDORA_VIEW_HOOK] = variable_get('islandora_audio_use_for_default_tab', TRUE);
+  //$types['islandora:sp_audio'][ISLANDORA_EDIT_HOOK] = FALSE;
+  return $types;
+}
+
+/**
+ * this modules implentation of view_object hook will handle objects of type islandora:audioCModel and  islandora:sp_audio
+ * as registered in its return types
+ * Other modules would handle objects of other types.
+ * @param Object $object
+ *    a tuque fedora object
+ * @param object $user
+ * @param string $page_number
+ * @param string $page_size
+ * @return string
+ *    themed html
+ */
+function islandora_audio_islandora_view_object($object, $user, $page_number, $page_size) {
+  global $base_url;
+//  module_load_include('inc', 'jw_player', );
+  $cmodel_list = islandora_audio_islandora_get_types();
+  $models = $object->models;
+  foreach ($object->models as $model) {
+    if (isset($cmodel_list[$model][ISLANDORA_VIEW_HOOK]) && $cmodel_list[$model][ISLANDORA_VIEW_HOOK] == TRUE) {
+      //$output = theme('islandora_audio', array('islandora_object' => $object));
+      $thumbnail = $base_url . "/" . drupal_get_path("module", "islandora_audio") . "/images/audio-TN.jpg";
+      $file_url = $base_url . "/islandora/object/" . $object->id . "/datastream/OBJ/view";
+      $file_mime = $object->getDatastream('OBJ')->mimetype;
+
+      $jwpath = libraries_get_path("jwplayer", TRUE);
+      drupal_add_js($jwpath . "/jwplayer.js");
+      $output = '<div id="mediaplayer">Loading player...</div><script
+      type="text/javascript">jwplayer("mediaplayer").setup({flashplayer:"'.$jwpath.'/player.swf",file:"'
+      .  $file_url . '",type:"audio",image:"' . $thumbnail . '",controlbar:"bottom"});</script>';
+
+      return $output;
+    }
+  }
+  return NULL;
+}
+
+function islandora_audio_islandora_ingest_post_ingest($object) {
+  $cmodel_list = islandora_audio_islandora_get_types();
+  if (!isset($cmodel_list)) {
+    return ;
+  }
+  $models = $object->models;
+  if (!isset($models)) {
+    return ;
+  }
+  foreach ($models as $model) {
+    if (isset($cmodel_list[$model])) {
+//      module_load_include('inc', 'islandora_audio', 'includes/image.process');
+//      islandora_audio_create_all_derivatives($object);
+    }
+  }
+}
+
+/**
+ *
+ * @global type $base_url
+ * @param array $variables
+ *   an array of variables that will be passed to the theme function
+ */
+function islandora_audio_preprocess_islandora_audio(&$variables) {
+  drupal_add_js('misc/form.js');
+  drupal_add_js('misc/collapse.js');
+  $islandora_object = $variables['islandora_object'];
+  $repository = $islandora_object->repository;
+  module_load_include('inc', 'islandora', 'includes/islandora_dublin_core');
+  module_load_include('inc', 'islandora', 'includes/datastream');
+
+  try {
+    $dc = $islandora_object['DC']->content;
+    $dc_object = Dublin_Core::import_from_xml_string($dc);
+  } catch (Exception $e) {
+    drupal_set_message(t('Error retrieving object %s %t', array('%s' => $islandora_object->id, '%t' => $e->getMessage())), 'error', FALSE);
+  }
+  $variables['islandora_dublin_core'] = isset($dc_object) ? $dc_object : NULL;
+  $variables['dc_array'] = isset($dc_object) ? $dc_object->as_formatted_array() : array();
+  $variables['islandora_object_label'] = $islandora_object->label;
+  $variables['theme_hook_suggestions'][] = 'islandora_audio__' . str_replace(':', '_', $islandora_object->id);
+  $variables['parent_collections'] = islandora_datastream_get_parents($islandora_object);
+  global $base_url;
+  if (isset($islandora_object['OBJ'])) {
+    $full_size_url = $base_url . '/islandora/object/' . $islandora_object->id . '/datastream/OBJ/view';
+    $variables['islandora_full_url'] = $full_size_url;
+    $variables['islandora_full_img'] = '<img src="' . $full_size_url . '"/>';
+  }
+  if (isset($islandora_object['TN'])) {
+    $thumbnail_size_url = $base_url . '/islandora/object/' . $islandora_object->id . '/datastream/TN/view';
+    $variables['islandora_thumbnail_img'] = '<img src="' . $thumbnail_size_url . '"/>';
+  }
+  if (isset($islandora_object['MEDIUM_SIZE'])) {
+    $medium_size_url = $base_url . '/islandora/object/' . $islandora_object->id . '/datastream/MEDIUM_SIZE/view';
+    $variables['islandora_medium_img'] = '<img src="' . $medium_size_url . '"/>';
+  }
+}

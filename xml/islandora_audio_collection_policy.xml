@@ -3,9 +3,8 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Islandora Audio Collection"
     xsi:schemaLocation="http://www.islandora.ca http://syn.lib.umanitoba.ca/collection_policy.xsd">
   <content_models>
-    <content_model dsid="ISLANDORACM" name="New Audio" namespace="islandora:collection"
-            pid="islandora:sp-audioCModel"/>
-        
+    <content_model dsid="ISLANDORACM" name="New Audio" namespace="islandora:1"
+            pid="islandora:sp_audio"/>
   </content_models>
   <search_terms/>
   <relationship>isMemberOfCollection</relationship>
