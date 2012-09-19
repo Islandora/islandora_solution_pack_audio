@@ -1,7 +1,6 @@
-name = "Islandora Audio"
+name = "Islandora audio"
 description = "A default Islandora Repository module to handle audio files"
 dependencies[] = islandora
-dependencies[] = jw_player
 package = Islandora
 core = 7.x
 version = 7.x-dev
