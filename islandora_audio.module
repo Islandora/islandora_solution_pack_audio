@@ -180,8 +180,8 @@ function islandora_audio_islandora_ingest_post_ingest($object) {
   }
   foreach ($models as $model) {
     if (isset($cmodel_list[$model])) {
-//      module_load_include('inc', 'islandora_audio', 'includes/image.process');
-//      islandora_audio_create_all_derivatives($object);
+      module_load_include('inc', 'islandora_audio', 'includes/audio_process');
+      islandora_audio_create_all_derivatives($object);
     }
   }
 }
