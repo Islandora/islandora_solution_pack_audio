@@ -144,17 +144,25 @@ function islandora_audio_islandora_view_object($object, $user, $page_number, $pa
   $models = $object->models;
   foreach ($object->models as $model) {
     if (isset($cmodel_list[$model][ISLANDORA_VIEW_HOOK]) && $cmodel_list[$model][ISLANDORA_VIEW_HOOK] == TRUE) {
-      //$output = theme('islandora_audio', array('islandora_object' => $object));
-      $thumbnail = $base_url . "/" . drupal_get_path("module", "islandora_audio") . "/images/audio-TN.jpg";
+
+      // Use this block for thumbnail extraction from files
+      if ($object->getDatastream('TN')) {
+        $thumbnail = $base_url . "/islandora/object/" . $object->id . "/datastream/TN/view";
+      }
+      else {
+        $thumbnail = $base_url . "/" . drupal_get_path("module", "islandora_audio") . "/images/audio-TN.jpg";
+      }
       $file_url = $base_url . "/islandora/object/" . $object->id . "/datastream/OBJ/view";
       $file_mime = $object->getDatastream('OBJ')->mimetype;
 
-      $jwpath = libraries_get_path("jwplayer", TRUE);
-      drupal_add_js($jwpath . "/jwplayer.js");
-      $output = '<div id="mediaplayer">Loading player...</div><script
-      type="text/javascript">jwplayer("mediaplayer").setup({flashplayer:"'.$jwpath.'/player.swf",file:"'
-      .  $file_url . '",type:"audio",image:"' . $thumbnail . '",controlbar:"bottom"});</script>';
-
+      $output = '<div id="mediaplayer">Attach your player to this div</div>';
+      $params = array(
+          "pid" => $object->id,
+          "url" => $file_url,
+          "mime" => $file_mime,
+          "tn" => $thumbnail
+      );
+      drupal_alter("islandora_audio_player", $output, $params);
       return $output;
     }
   }
