@@ -182,12 +182,12 @@ function islandora_audio_theme($existing, $type, $theme, $path) {
 function islandora_audio_islandora_get_types() {
   $types = array();
   $types['islandora:sp-audioCModel'][ISLANDORA_VIEW_HOOK] = variable_get('islandora_audio_use_for_default_tab', TRUE);
-  //$types['islandora:sp_audio'][ISLANDORA_EDIT_HOOK] = FALSE;
+  //$types['islandora:sp-audioCModel'][ISLANDORA_EDIT_HOOK] = FALSE;
   return $types;
 }
 
 /**
- * this modules implentation of view_object hook will handle objects of type islandora:audioCModel and  islandora:sp_audio
+ * this modules implentation of view_object hook will handle objects of type islandora:audioCModel and  islandora:sp-audioCModel
  * as registered in its return types
  * Other modules would handle objects of other types.
  * @param Object $object
