@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * This file contains all functions to process derivatives of audio objects
+ */
+
+/**
  * Creates the derivatives for this content model type.
  * @param object $object
  *   tuque FedoraObject

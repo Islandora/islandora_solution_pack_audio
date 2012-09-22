@@ -15,7 +15,7 @@ class Exiftool {
 
   /**
    * Constructor
-   * @param type $pid 
+   * @param type $pid
    */
   function __construct($pid = NULL) {
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
@@ -31,7 +31,7 @@ class Exiftool {
    * @param type $dsid
    * @param type $file
    * @param type $file_ext
-   * @return type 
+   * @return type
    */
   function extractMetadata($parameterArray, $dsid, $file, $file_ext) {
     $file_suffix = '_' . $dsid . '.xml';
@@ -45,7 +45,7 @@ class Exiftool {
 
   /**
    * Display Metadata
-   * @return type 
+   * @return type
    */
   function displayMetadata() {
     $output = '';
@@ -102,7 +102,7 @@ class AudioManipulation {
    * @param type file
    * @param type $file
    * @param type $file_ext
-   * @return type 
+   * @return type
    */
   function createMP3($parameterArray = NULL, $dsid, $file, $file_ext) {
     $file_suffix = "_$dsid.$file_ext";
@@ -137,7 +137,7 @@ class SWFAudioPlayer {
 
   /**
    * Constructor
-   * @param type $pid 
+   * @param type $pid
    */
   function __construct($pid) {
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
@@ -150,7 +150,7 @@ class SWFAudioPlayer {
   /**
    * Show MP3
    * @global type $base_url
-   * @return type 
+   * @return type
    */
   function showMP3() {
 
