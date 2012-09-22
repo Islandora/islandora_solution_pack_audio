@@ -7,7 +7,7 @@
  * @return string
  */
 function islandora_audio_create_all_derivatives($object) {
-dsm("create derivatives");
+  // create derivatives
   module_load_include("inc", "islandora", "includes/mime.detect");
 
   if (!isset($object["OBJ"])) {
@@ -19,21 +19,15 @@ dsm("create derivatives");
   $file_name = str_replace(":", "-", $object->id);
   $original_file = file_save_data($object["OBJ"]->content, "temporary://" . $file_name . "OBJ." . $ext);
   //$mp3_file = file_copy($original_file, "temporary://" . $file_name . "MP3." . $ext);
-  dsm("create mp3");
+  // create MP3
   $mp3 = islandora_audio_create_mp3($original_file);
   if ($mp3) {
     islandora_audio_add_datastream($object, "PROXY_MP3", $mp3);
   }
-  else {
-    dsm("mp3 creation failed");
-  }
-  dsm("create exif");
+  // create exif
   $exif = islandora_audio_create_exif($original_file);
   if ($exif) {
     islandora_audio_add_datastream($object, "TECHMD", $exif);
-  }
-  else {
-    dsm("exif creation failed");
   }
 
   file_delete($original_file);
