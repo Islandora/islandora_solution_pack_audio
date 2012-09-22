@@ -103,7 +103,6 @@ function islandora_audio_islandora_required_objects() {
 
   return array(
     'islandora_audio' => array(
-      'module' => 'islandora_audio',
       'title' => 'Islandora audio',
       'objects' => array(
         array(
