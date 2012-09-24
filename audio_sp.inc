@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Audio solution pack classes
+ * THIS FILE IS MARKED FOR DEATH. ONCE THE EXIFTOOL CODE HAS BEEN MOVED OVER, IT WILL BE DESTROYED.
  */
 
 /**

@@ -94,6 +94,67 @@ function islandora_audio_init() {
 }
 
 /**
+ * Implements hook_islandora_required_objects().
+ */
+function islandora_audio_islandora_required_objects() {
+
+  // module path
+  $module_path = drupal_get_path('module', 'islandora_audio');
+
+  return array(
+    'islandora_audio' => array(
+      'module' => 'islandora_audio',
+      'title' => 'Islandora audio',
+      'objects' => array(
+        array(
+          'pid' => 'islandora:sp-audioCModel',
+          'label' => 'Islandora audio content model',
+          'cmodel' => 'fedora-system:ContentModel-3.0',
+          'datastreams' => array(
+            array(
+              'dsid' => 'ISLANDORACM',
+              'label' => 'Islandora content model',
+              'mimetype' => 'text/xml',
+              'control_group' => 'X',
+              'datastream_file' => "$module_path/xml/islandora_audio_content_model.xml",
+            ),
+            array(
+              'dsid' => 'DS-COMPOSITE-MODEL',
+              'label' => 'DS-COMPOSITE-MODEL',
+              'mimetype' => 'text/xml',
+              'control_group' => 'X',
+              'datastream_file' => "$module_path/xml/islandora_audio_ds_composite_model.xml",              
+            ),
+          ),
+        ),
+        array(
+          'pid' => 'islandora:audio_collection',
+          'label' => 'Audio collection',
+          'cmodel' => 'islandora:collectionCModel',
+          'parent' => 'islandora:root',
+          'datastreams' => array(
+            array(
+              'dsid' => 'COLLECTION_POLICY',
+              'label' => 'Collection policy',
+              'mimetype' => 'text/xml',
+              'control_group' => 'X',
+              'datastream_file' => "$module_path/xml/islandora_audio_collection_policy.xml",
+            ),
+            array(
+              'dsid' => 'TN',
+              'label' => 'Thumbnail',
+              'mimetype' => 'image/png',
+              'control_group' => 'M',
+              'datastream_file' => "$module_path/images/folder.png",
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+/**
  * Theme registry function
  * We supply a pattern so we can overide templates at the theme level if needed.
  * we can append a pid to a template and the new template file will be called (the pids
@@ -120,13 +181,13 @@ function islandora_audio_theme($existing, $type, $theme, $path) {
  */
 function islandora_audio_islandora_get_types() {
   $types = array();
-  $types['islandora:sp_audio'][ISLANDORA_VIEW_HOOK] = variable_get('islandora_audio_use_for_default_tab', TRUE);
-  //$types['islandora:sp_audio'][ISLANDORA_EDIT_HOOK] = FALSE;
+  $types['islandora:sp-audioCModel'][ISLANDORA_VIEW_HOOK] = variable_get('islandora_audio_use_for_default_tab', TRUE);
+  //$types['islandora:sp-audioCModel'][ISLANDORA_EDIT_HOOK] = FALSE;
   return $types;
 }
 
 /**
- * this modules implentation of view_object hook will handle objects of type islandora:audioCModel and  islandora:sp_audio
+ * this modules implentation of view_object hook will handle objects of type islandora:audioCModel and  islandora:sp-audioCModel
  * as registered in its return types
  * Other modules would handle objects of other types.
  * @param Object $object
