@@ -103,7 +103,6 @@ function islandora_audio_islandora_required_objects() {
 
   return array(
     'islandora_audio' => array(
-      'module' => 'islandora_audio',
       'title' => 'Islandora audio',
       'objects' => array(
         array(
@@ -123,7 +122,7 @@ function islandora_audio_islandora_required_objects() {
               'label' => 'DS-COMPOSITE-MODEL',
               'mimetype' => 'text/xml',
               'control_group' => 'X',
-              'datastream_file' => "$module_path/xml/islandora_audio_ds_composite_model.xml",              
+              'datastream_file' => "$module_path/xml/islandora_audio_ds_composite_model.xml",
             ),
           ),
         ),
