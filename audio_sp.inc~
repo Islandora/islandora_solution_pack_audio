@@ -109,7 +109,7 @@ class AudioManipulation {
     $return_value = TRUE;
 
     $output = array();
-    //want to use the variable from the admin page.  If there is none then use the default lame
+    //want to use the variable from the admin page.  If there is none then use the default /usr/bin/lame
     $lame = variable_get('islandora_lame_path', 'lame');
     $command_string = "$lame -V5 --vbr-new '${file}' '${file}.mp3'";
 
