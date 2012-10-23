@@ -58,6 +58,11 @@ function islandora_audio_admin_settings(&$form_state) {
   $form['#submit'][] = 'audio_settings_form_submit';
   $form['#theme'] = 'system_settings_form';
   
+   $form['audio_ahah_wrapper']['infobox'] = array(
+      '#type' => 'item',
+      '#value' => $confirmation_message,
+    );
+  
   return ($form);
 }
 
@@ -139,3 +144,15 @@ function audio_settings_form_submit($form, &$form_state) {
   cache_clear_all();
   drupal_rebuild_theme_registry();
 }
+/**
+ * audio admin refresh
+ * @param array $form
+ * @param array $form_state
+ */
+function audio_admin_refresh($form, &$form_state) {
+  $values = $form_state['values'];
+  unset($form_state['submit_handlers']);
+  form_execute_handlers('submit', $form, $form_state);
+  $form_state['rebuild'] = TRUE;
+  }
+  
