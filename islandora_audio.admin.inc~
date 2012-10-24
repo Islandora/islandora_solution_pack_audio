@@ -8,11 +8,23 @@
 function islandora_audio_admin_settings(&$form_state) {
 
 	//get the path for lame
+	
   $lame_path = isset($form_state['values']['islandora_lame_path']) ? $form_state['values']['islandora_lame_path'] : variable_get('islandora_lame_path', 'lame');
   
-  //we want to see if the lame path is available
-  $lame_avail = exec("ls $lame_path");
 
+  if ($lame_path == 'lame' || $lame_path == '')
+  {
+  		//set the path name
+		$lame_path = 'lame';
+		
+		$which_lame = exec("which $lame_path");
+		$lame_avail = exec("ls $which_lame");
+  }
+  else {
+  	$lame_avail = exec("ls $lame_path");
+  	}
+	
+  //we want to see if the lame path is available
   $confirmation_message = ($lame_avail ? '<img src="' . url('misc/watchdog-ok.png') . '"/>'
           . t('Lame found at !lame_path', array('!lame_path' => $lame_path)) : '<img src="'
           . url('misc/watchdog-error.png') . '"/> '
@@ -49,6 +61,7 @@ function islandora_audio_admin_settings(&$form_state) {
       '#ahah' => array(
         'path' => 'islandora/audio/lame',
         'wrapper' => 'iaudio-url',
+        'keypress'=> true
         'effect' => 'fade',
         'event' => 'change'),
     	);
@@ -145,7 +158,7 @@ function audio_settings_form_submit($form, &$form_state) {
   drupal_rebuild_theme_registry();
 }
 /**
- * video admin refresh
+ * audio admin refresh
  * @param array $form
  * @param array $form_state
  */
