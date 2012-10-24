@@ -21,8 +21,8 @@ function islandora_audio_admin_settings(&$form_state) {
 		$lame_avail = exec("ls $which_lame");
   }
   else {
-  	$lame_avail = exec("ls $lame_path");
-  	}
+  		$lame_avail = exec("ls $lame_path");
+  }
 	
   //we want to see if the lame path is available
   $confirmation_message = ($lame_avail ? '<img src="' . url('misc/watchdog-ok.png') . '"/>'
