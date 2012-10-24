@@ -1,0 +1,32 @@
+<?php
+
+module_load_include('inc', 'islandora_audio_sp', 'islandora_test_case');
+
+class AudioSolutionPackTestCase extends IslandoraTestCase {
+
+  /**
+   * Returns properties that are displayed in the test selection form.
+   *
+   * @return array - An associative array of info used to populate the test selection form
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Islandora Audio Solution Pack Test Case',
+      'description' => "Ensure the fedora_repository_required_fedora_objects() function's return value is appropriate.",
+      'group' => 'Solution Packs',
+    );
+  }
+  
+  /**
+   * Overridden to provide the short form name of the module being tested.
+   *
+   * @return string - 'islandora_audio_sp'
+   */
+  protected function getModuleShortFormName() { 
+    return 'islandora_audio_sp';
+  }
+
+  public function testSomething() {
+    $this->assertTrue( FALSE, "It's a test. You failed." );
+  }
+}
