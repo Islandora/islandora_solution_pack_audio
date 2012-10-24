@@ -2,7 +2,7 @@
 
 /**
  * @file
- * SimpleTest tests for the Islandora Audio Solution Pack module
+ * Generic test case to be extended to implement Islandora testing.
  */
 abstract class IslandoraTestCase extends DrupalWebTestCase
 {

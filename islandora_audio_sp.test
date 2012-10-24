@@ -2,6 +2,10 @@
 
 module_load_include('inc', 'islandora_audio_sp', 'islandora_test_case');
 
+/**
+ * @file
+ * All tests relating to Islandora's Audio Solution Pack.
+ */
 class AudioSolutionPackTestCase extends IslandoraTestCase {
 
   /**
@@ -12,11 +16,11 @@ class AudioSolutionPackTestCase extends IslandoraTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Islandora Audio Solution Pack Test Case',
-      'description' => "Ensure the fedora_repository_required_fedora_objects() function's return value is appropriate.",
+      'description' => "Functional tests for the Islandora Audio Solution Pack.",
       'group' => 'Solution Packs',
     );
   }
-  
+ 
   /**
    * Overridden to provide the short form name of the module being tested.
    *
