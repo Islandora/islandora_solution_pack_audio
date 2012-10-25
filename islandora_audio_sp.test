@@ -1,6 +1,6 @@
 <?php
 
-module_load_include('inc', 'islandora_audio_sp', 'islandora_test_case');
+module_load_include('inc', 'fedora_repository', 'fedora_repository.test');
 
 /**
  * @file
