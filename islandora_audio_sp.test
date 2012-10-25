@@ -1,12 +1,12 @@
 <?php
 
-module_load_include('inc', 'fedora_repository', 'fedora_repository.test');
+module_load_include('inc', 'fedora_repository', 'fedora_repository.solutionpacks');
 
 /**
  * @file
  * All tests relating to Islandora's Audio Solution Pack.
  */
-class AudioSolutionPackTestCase extends IslandoraTestCase {
+class AudioSolutionPackTestCase extends SolutionPackTestCase {
 
   /**
    * Returns properties that are displayed in the test selection form.
@@ -30,7 +30,4 @@ class AudioSolutionPackTestCase extends IslandoraTestCase {
     return 'islandora_audio_sp';
   }
 
-  public function testSomething() {
-    $this->assertTrue( FALSE, "It's a test. You failed." );
-  }
 }
