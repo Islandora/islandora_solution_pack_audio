@@ -12,6 +12,7 @@ function islandora_audio_admin_settings(&$form_state) {
   $lame_path = isset($form_state['values']['islandora_lame_path']) ? $form_state['values']['islandora_lame_path'] : variable_get('islandora_lame_path', 'lame');
   
 
+  /*
   if ($lame_path == 'lame' || $lame_path == '')
   {
   		//set the path name
@@ -23,8 +24,25 @@ function islandora_audio_admin_settings(&$form_state) {
   else {
   		$lame_avail = exec("ls $lame_path");
   }
+   *
+   */
+  exec("$lame_path --help", $output, $return);
+  dsm($output);
+  dsm($return);
 	
   //we want to see if the lame path is available
+  /*
+  if($return == 0) {
+    $confirmation_message = '<img src="' . url('misc/watchdog-ok.png') . '"/>' . t('Lame found at !lame_path', array('!lame_path' => $lame_path));
+  }
+  else {
+    $confirmation_message = '<img src="' 
+          . url('misc/watchdog-error.png') . '"/> '
+          . t('Unable to locate Lame at !lame_path</p>', array('!lame_path' => $lame_path)));
+  }
+   * 
+   */
+
   $confirmation_message = ($lame_avail ? '<img src="' . url('misc/watchdog-ok.png') . '"/>'
           . t('Lame found at !lame_path', array('!lame_path' => $lame_path)) : '<img src="'
           . url('misc/watchdog-error.png') . '"/> '
