@@ -5,10 +5,10 @@
  */
 
 /**
- * Islandora audio solution pack required fedora objects
- * @return type
+ * Implements hook_fedora_repository_required_fedora_objects
+ * @return array 
  */
-function islandora_audio_sp_required_fedora_objects() {
+function islandora_audio_sp_fedora_repository_required_fedora_objects() {
   module_load_include('inc', 'fedora_repository', 'fedora_repository.solutionpacks');
   $module_path = drupal_get_path('module', 'islandora_audio_sp');
   $islandora_path = drupal_get_path('module', 'fedora_repository');
