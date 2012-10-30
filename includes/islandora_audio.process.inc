@@ -59,7 +59,7 @@ function islandora_audio_create_mp3($file_object) {
 }
 
 /**
- *
+ * Creates file derivatives as xml.
  */
 function islandora_audio_create_exif($file_object) {
   $output = array();
