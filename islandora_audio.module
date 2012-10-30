@@ -154,6 +154,34 @@ function islandora_audio_islandora_required_objects() {
 }
 
 /**
+ * Implements hook_islandora_xml_form_builder_forms().
+ */
+function islandora_audio_islandora_xml_form_builder_forms() {
+  $module_path = drupal_get_path('module', 'islandora_audio');
+  return array(
+    'Audio MODS form' => array(
+      'form_file' => "$module_path/xml/islandora_audio_form_mods.xml",
+    ),
+  );
+}
+
+/**
+ * Implements hook_islandora_content_model_forms_form_associations().
+ */
+function islandora_audio_islandora_content_model_forms_form_associations() {
+  return array(
+    'islandora_audio_mods_form' => array(
+      'content_model' => 'islandora:sp-audioCModel',
+      'form_name' => 'Audio MODS form',
+      'dsid' => 'MODS',
+      'title_field' => "['titleInfo']['title']",
+      'transform' => 'mods_to_dc.xsl',
+      'template' => FALSE,
+    ),
+  );
+}
+
+/**
  * Theme registry function
  * We supply a pattern so we can overide templates at the theme level if needed.
  * we can append a pid to a template and the new template file will be called (the pids
@@ -240,7 +268,7 @@ function islandora_audio_islandora_ingest_post_ingest($object) {
   }
   foreach ($models as $model) {
     if (isset($cmodel_list[$model])) {
-      module_load_include('inc', 'islandora_audio', 'includes/audio_process');
+      module_load_include('inc', 'islandora_audio', 'includes/islandora_audio.process');
       islandora_audio_create_all_derivatives($object);
     }
   }
