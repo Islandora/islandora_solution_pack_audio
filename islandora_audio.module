@@ -154,6 +154,43 @@ function islandora_audio_islandora_required_objects() {
 }
 
 /**
+ * Implements hook_CMODEL_PID_islandora_view_object().
+ */
+function islandora_audio_islandora_sp_audioCModel_islandora_view_object($object, $user, $page_number, $page_size) {
+  // @TODO: this could use a theme function call
+  // @TODO: replace the 'islandora_audio_player' call.
+  global $base_url;
+  // Use this block for thumbnail extraction from files
+  if ($object->getDatastream('TN')) {
+    $thumbnail = $base_url . "/islandora/object/" . $object->id . "/datastream/TN/view";
+  }
+  else {
+    $thumbnail = $base_url . "/" . drupal_get_path("module", "islandora_audio") . "/images/audio-TN.jpg";
+  }
+  $file_url = $base_url . "/islandora/object/" . $object->id . "/datastream/OBJ/view";
+  $file_mime = $object->getDatastream('OBJ')->mimetype;
+
+  $output = '<div id="mediaplayer">Attach your player to this div</div>';
+  $params = array(
+      "pid" => $object->id,
+      "url" => $file_url,
+      "mime" => $file_mime,
+      "tn" => $thumbnail
+  );
+  drupal_alter("islandora_audio_player", $output, $params);
+
+  return array('' => $output);
+}
+
+/** 
+ * Implements hook_CMODEL_PID_islandora_ingest_post_ingest().
+ */
+function islandora_audio_islandora_sp_audioCModel_islandora_ingest_post_ingest($object) {
+  module_load_include('inc', 'islandora_audio', 'includes/islandora_audio.process');
+  islandora_audio_create_all_derivatives($object);
+}
+
+/**
  * Implements hook_islandora_xml_form_builder_forms().
  */
 function islandora_audio_islandora_xml_form_builder_forms() {
@@ -198,80 +235,6 @@ function islandora_audio_theme($existing, $type, $theme, $path) {
       'variables' => array('islandora_object' => NULL),
     )
   );
-}
-
-/**
- * tells the main module what types of objects we support.  This is used to determine whether or not
- * this module should attempt to respond.
- * @return array
- *   array of content model pids that this module supports
- */
-function islandora_audio_islandora_get_types() {
-  $types = array();
-  $types['islandora:sp-audioCModel'][ISLANDORA_VIEW_HOOK] = variable_get('islandora_audio_use_for_default_tab', TRUE);
-  //$types['islandora:sp-audioCModel'][ISLANDORA_EDIT_HOOK] = FALSE;
-  return $types;
-}
-
-/**
- * this modules implentation of view_object hook will handle objects of type islandora:audioCModel and  islandora:sp-audioCModel
- * as registered in its return types
- * Other modules would handle objects of other types.
- * @param Object $object
- *    a tuque fedora object
- * @param object $user
- * @param string $page_number
- * @param string $page_size
- * @return string
- *    themed html
- */
-function islandora_audio_islandora_view_object($object, $user, $page_number, $page_size) {
-  global $base_url;
-//  module_load_include('inc', 'jw_player', );
-  $cmodel_list = islandora_audio_islandora_get_types();
-  $models = $object->models;
-  foreach ($object->models as $model) {
-    if (isset($cmodel_list[$model][ISLANDORA_VIEW_HOOK]) && $cmodel_list[$model][ISLANDORA_VIEW_HOOK] == TRUE) {
-
-      // Use this block for thumbnail extraction from files
-      if ($object->getDatastream('TN')) {
-        $thumbnail = $base_url . "/islandora/object/" . $object->id . "/datastream/TN/view";
-      }
-      else {
-        $thumbnail = $base_url . "/" . drupal_get_path("module", "islandora_audio") . "/images/audio-TN.jpg";
-      }
-      $file_url = $base_url . "/islandora/object/" . $object->id . "/datastream/OBJ/view";
-      $file_mime = $object->getDatastream('OBJ')->mimetype;
-
-      $output = '<div id="mediaplayer">Attach your player to this div</div>';
-      $params = array(
-          "pid" => $object->id,
-          "url" => $file_url,
-          "mime" => $file_mime,
-          "tn" => $thumbnail
-      );
-      drupal_alter("islandora_audio_player", $output, $params);
-      return $output;
-    }
-  }
-  return NULL;
-}
-
-function islandora_audio_islandora_ingest_post_ingest($object) {
-  $cmodel_list = islandora_audio_islandora_get_types();
-  if (!isset($cmodel_list)) {
-    return ;
-  }
-  $models = $object->models;
-  if (!isset($models)) {
-    return ;
-  }
-  foreach ($models as $model) {
-    if (isset($cmodel_list[$model])) {
-      module_load_include('inc', 'islandora_audio', 'includes/islandora_audio.process');
-      islandora_audio_create_all_derivatives($object);
-    }
-  }
 }
 
 /**
