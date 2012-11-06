@@ -58,4 +58,12 @@ function islandora_audio_uninstall() {
   module_load_include('inc', 'islandora', 'includes/solution_packs');
   // uninstall procedure
   islandora_install_solution_pack('islandora_audio', 'uninstall');
+  // remove variables
+  $variables = array(
+    'islandora_audio_use_for_default_tab',
+    'islandora_audio_viewers',
+  );
+  foreach ($variables as $variable) {
+    variable_del($variable);
+  }
 }

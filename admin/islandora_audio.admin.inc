@@ -26,5 +26,36 @@ function islandora_audio_admin() {
   // add viewer table
   $form += $viewer_table;
 
+  // actions
+  $form['actions'] = array(
+    '#type' => 'actions'
+  );
+  $form['actions']['reset'] = array(
+    '#type' => 'submit',
+    '#value' => t('Reset to defaults'),
+    '#weight' => 1,
+    '#submit' => array('islandora_audio_admin_submit'),
+  );
+
   return system_settings_form($form);
+}
+
+/**
+ * Form validate
+ */
+function islandora_audio_admin_validate($form, &$form_state) {
+
+}
+
+/**
+ * Form submit
+ */
+function islandora_audio_admin_submit($form, &$form_state) {
+  $op = $form_state['clicked_button']['#id'];
+  switch ($op) {
+    case 'edit-reset':
+      variable_del('islandora_audio_use_for_default_tab');
+      variable_del('islandora_audio_viewers');
+      break;
+  }
 }
