@@ -60,7 +60,6 @@ function islandora_audio_uninstall() {
   islandora_install_solution_pack('islandora_audio', 'uninstall');
   // remove variables
   $variables = array(
-    'islandora_audio_use_for_default_tab',
     'islandora_audio_viewers',
   );
   foreach ($variables as $variable) {
