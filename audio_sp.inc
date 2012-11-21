@@ -88,11 +88,11 @@ class Exiftool {
  */
 class AudioManipulation {
 
-  /**
+/**
    * Constructor
    */
   function AudioManipulation() {
-    module_load_include('inc', 'fedora_repository', 'ObjectHelper');
+    
   }
 
   /**
@@ -121,9 +121,7 @@ class AudioManipulation {
       $_SESSION['fedora_ingest_files']["TN"] = $thumbnail;
       return TRUE;
     }
-    else {
-      ObjectHelper::warnIfMisconfigured('LAME'); /// need to add this to ObjectHelper
-    }
+
   }
 
 }

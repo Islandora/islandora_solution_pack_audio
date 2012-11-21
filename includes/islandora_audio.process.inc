@@ -14,13 +14,13 @@
 function islandora_audio_create_all_derivatives($object) {
   // create derivatives
   module_load_include("inc", "islandora", "includes/mime.detect");
-
+  $tn_path = drupal_get_path('module', 'islandora_audio'). '/images/audio-TN.jpg';
   if (!isset($object["OBJ"])) {
     drupal_set_message(t("Could not create derivatives for %s.  No file was uploaded.", array("%s" => $object->id), "error"));
     return FALSE;
   }
-
-  $ext = pathinfo($object["OBJ"]->uri, PATHINFO_EXTENSION);
+  $obj = $object["OBJ"];
+  $ext = pathinfo($obj->label, PATHINFO_EXTENSION);
   $file_name = str_replace(":", "-", $object->id);
   $original_file = file_save_data($object["OBJ"]->content, "temporary://" . $file_name . "OBJ." . $ext);
   //$mp3_file = file_copy($original_file, "temporary://" . $file_name . "MP3." . $ext);
@@ -34,7 +34,7 @@ function islandora_audio_create_all_derivatives($object) {
   if ($exif) {
     islandora_audio_add_datastream($object, "TECHMD", $exif);
   }
-
+  islandora_audio_add_datastream($object, "TN", $tn_path);
   file_delete($original_file);
   return TRUE;
 }
@@ -44,9 +44,10 @@ function islandora_audio_create_all_derivatives($object) {
  */
 function islandora_audio_create_mp3($file_object) {
   $output = array();
+  $lame_url = variable_get('islandora_lame_url', '/usr/bin/lame');
   $file = drupal_realpath($file_object->uri);
   $outfile = $file . ".mp3";
-  $command_string = "lame -V5 --vbr-new '${file}' '${outfile}'";
+  $command_string = "$lame_url -V5 --vbr-new '${file}' '${outfile}'";
   $return_value = FALSE;
   exec($command_string, $output, $return_value);
 
@@ -69,8 +70,6 @@ function islandora_audio_create_exif($file_object) {
   $return_value = FALSE;
   exec($command_string, $output, $return_value);
   if ($return_value == '0') {
-    // succeeded in creating derivative exif
-//    file_put_contents($outfile, implode("\n", $output));
     return $outfile;
   }
   return FALSE;
@@ -91,8 +90,7 @@ function islandora_audio_add_datastream($object, $dsid, $file) {
     $ds->setContentFromFile(drupal_realpath($file));
     $object->ingestDatastream($ds);
 //    file_delete($file);
-  }
-  catch (exception $e) {
+  } catch (exception $e) {
     drupal_set_message(t("@message", array("@message" => $e->getMessage())));
   }
 }
