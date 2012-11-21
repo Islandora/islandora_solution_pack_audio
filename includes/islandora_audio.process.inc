@@ -14,7 +14,7 @@
 function islandora_audio_create_all_derivatives($object) {
   // create derivatives
   module_load_include("inc", "islandora", "includes/mime.detect");
-  $tn_path = drupal_get_path('module', 'islandora_audio'). '/images/audio-TN.jpg';
+  $tn_path = drupal_get_path('module', 'islandora_audio') . '/images/audio-TN.jpg';
   if (!isset($object["OBJ"])) {
     drupal_set_message(t("Could not create derivatives for %s.  No file was uploaded.", array("%s" => $object->id), "error"));
     return FALSE;

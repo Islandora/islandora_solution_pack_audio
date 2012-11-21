@@ -26,7 +26,7 @@ function islandora_audio_admin($form, &$form_state) {
     '#prefix' => '<div id = "lame_url">',
     '#suffix' => '</div>',
     '#type' => 'textfield',
-    '#description' => t("This module requires !LAME to create derivative files", array('!LAME' => l('LAME', 'http://lame.sourceforge.net/'))),
+    '#description' => t("This module requires !LAME to create derivative files", array('!LAME' => l(t('LAME'), 'http://lame.sourceforge.net/'))),
     '#default_value' => $lame_url,
     '#size' => 20
   );
@@ -45,7 +45,7 @@ function islandora_audio_admin($form, &$form_state) {
     '#description' => t('Path to !LAME <br /> !confirmation_message',
         array(
           '!confirmation_message' => $confirmation_message,
-          '!LAME' => l('LAME', 'http://lame.sourceforge.net/')
+          '!LAME' => l(t('LAME'), 'http://lame.sourceforge.net/')
     )),
     '#required' => TRUE,
     '#ajax' => array(
