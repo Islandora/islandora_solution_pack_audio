@@ -197,7 +197,7 @@ function islandora_audio_preprocess_islandora_audio(array &$variables) {
 function islandora_audio_islandora_sp_audiocmodel_islandora_ingest_steps(array $configuration) {
   return array(
     array(
-      'weight' => -10,
+      'weight' => 10,
       'type' => 'form',
       'form_id' => 'islandora_audio_audio_upload_form',
       'module' => 'islandora_audio',
