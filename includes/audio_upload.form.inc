@@ -3,7 +3,7 @@
 /**
  * @file
  *
- * Handles the uploading of the image file.
+ * Handles the uploading of the audio file as part of the ingest process.
  */
 
 /**
@@ -21,11 +21,11 @@ function islandora_audio_audio_upload_form(array $form, array &$form_state) {
   $extensions = array('wav mp3');
   return array(
     'file' => array(
-      '#title' => t('Image'),
+      '#title' => t('Audio File'),
       '#type' => 'managed_file',
       '#required' => TRUE,
-      '#description' => t('Select image to upload.<br/>Files must be less than <b>!size MB.</b><br/>Allowed file types: <b>!ext.</b>', array('!size' => $upload_size, '!ext' => $extensions[0])),
-      '#default_value' => isset($form_state['values']['files']) ? $form_state['values']['files'] : NULL,
+      '#description' => t('Select file to upload.<br/>Files must be less than <b>!size MB.</b><br/>Allowed file types: <b>!ext.</b>', array('!size' => $upload_size, '!ext' => $extensions[0])),
+      '#default_value' => isset($form_state['values']['file']) ? $form_state['values']['file'] : NULL,
       '#upload_location' => 'temporary://',
       '#upload_validators' => array(
         'file_validate_extensions' => $extensions,
@@ -36,7 +36,7 @@ function islandora_audio_audio_upload_form(array $form, array &$form_state) {
 }
 
 /**
- * Submit handler, adds uploaded file to ingest object
+ * Addes the uploaded file into the ingestable objects 'OBJ' datastream.
  *
  * @param array $form
  *   The drupal form.

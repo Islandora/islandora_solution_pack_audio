@@ -3,7 +3,7 @@
 /**
  * @file
  *
- * An handles the creation/display of islandora:sp-audioCModel objects.
+ * Handles the creation/display of islandora:sp-audioCModel objects.
  */
 
 /**

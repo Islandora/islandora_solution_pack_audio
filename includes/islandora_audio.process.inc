@@ -23,12 +23,12 @@ function islandora_audio_create_all_derivatives($object) {
   $mime_detect = new MimeDetect();
   $ext = $mime_detect->getExtension($object['OBJ']->mimeType);
   $file_name = str_replace(":", "-", $object->id);
-  $file_uri = file_unmanaged_save_data($object["OBJ"]->content, "temporary://{$file_name}.OBJ.{$ext}");
+  $file_uri = file_unmanaged_save_data($object['OBJ']->content, "temporary://{$file_name}.OBJ.{$ext}");
   if (($mp3_uri = islandora_audio_create_mp3($file_uri)) !== FALSE) {
-    islandora_audio_add_datastream($object, "PROXY_MP3", $mp3_uri);
+    islandora_audio_add_datastream($object, 'PROXY_MP3', $mp3_uri);
   }
   if (($exif_uri = islandora_audio_create_exif($file_uri)) !== FALSE) {
-    islandora_audio_add_datastream($object, "TECHMD", $exif_uri);
+    islandora_audio_add_datastream($object, 'TECHMD', $exif_uri);
   }
   file_unmanaged_delete($file_uri);
   islandora_audio_add_datastream($object, 'TN', drupal_get_path('module', 'islandora_audio') . '/images/audio-TN.jpg');
