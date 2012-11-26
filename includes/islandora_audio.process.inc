@@ -2,95 +2,101 @@
 
 /**
  * @file
- * This file contains all functions to process derivatives of audio objects
+ *
+ * This file contains all functions used to generate derivatives of audio objects.
  */
 
 /**
- * Creates the derivatives for this content model type.
- * @param object $object
- *   tuque FedoraObject
- * @return string
+ * Creates all audio based the derivatives as datastreams for given object.
+ *
+ * @param FedoraObject $object
+ *   The object that will be used to generate/store the derivatives.
+ *
+ * @return boolean
+ *   TRUE if successful, FALSE otherwise.
  */
 function islandora_audio_create_all_derivatives($object) {
-  // create derivatives
-  module_load_include("inc", "islandora", "includes/mime.detect");
-
   if (!isset($object["OBJ"])) {
     drupal_set_message(t("Could not create derivatives for %s.  No file was uploaded.", array("%s" => $object->id), "error"));
     return FALSE;
   }
-
-  $ext = pathinfo($object["OBJ"]->uri, PATHINFO_EXTENSION);
+  $mime_detect = new MimeDetect();
+  $ext = $mime_detect->getExtension($object['OBJ']->mimeType);
   $file_name = str_replace(":", "-", $object->id);
-  $original_file = file_save_data($object["OBJ"]->content, "temporary://" . $file_name . "OBJ." . $ext);
-  //$mp3_file = file_copy($original_file, "temporary://" . $file_name . "MP3." . $ext);
-  // create MP3
-  $mp3 = islandora_audio_create_mp3($original_file);
-  if ($mp3) {
-    islandora_audio_add_datastream($object, "PROXY_MP3", $mp3);
+  $file_uri = file_unmanaged_save_data($object["OBJ"]->content, "temporary://{$file_name}.OBJ.{$ext}");
+  if (($mp3_uri = islandora_audio_create_mp3($file_uri)) !== FALSE) {
+    islandora_audio_add_datastream($object, "PROXY_MP3", $mp3_uri);
   }
-  // create exif
-  $exif = islandora_audio_create_exif($original_file);
-  if ($exif) {
-    islandora_audio_add_datastream($object, "TECHMD", $exif);
+  if (($exif_uri = islandora_audio_create_exif($file_uri)) !== FALSE) {
+    islandora_audio_add_datastream($object, "TECHMD", $exif_uri);
   }
-
-  file_delete($original_file);
+  file_unmanaged_delete($file_uri);
+  islandora_audio_add_datastream($object, 'TN', drupal_get_path('module', 'islandora_audio') . '/images/audio-TN.jpg');
   return TRUE;
 }
 
 /**
+ * Creates the mp3 derivative from the given audio file.
  *
+ * @param string $file_uri
+ *   The URI to the audio file the derivative will be generated from.
+ *
+ * @return string
+ *   A URI to the generated derivative if successful, FALSE otherwise.
  */
-function islandora_audio_create_mp3($file_object) {
+function islandora_audio_create_mp3($file_uri) {
   $output = array();
-  $file = drupal_realpath($file_object->uri);
-  $outfile = $file . ".mp3";
+  $file = drupal_realpath($file_uri);
+  $outfile = $file . '.mp3';
   $command_string = "lame -V5 --vbr-new '${file}' '${outfile}'";
-  $return_value = FALSE;
-  exec($command_string, $output, $return_value);
-
-  if ($return_value == '0') {
-    // succeeded in creating derivative mp3
+  $ret = FALSE;
+  exec($command_string, $output, $ret);
+  if ($ret == '0') {
     return $outfile;
   }
-
   return FALSE;
 }
 
 /**
- * Creates file derivatives as xml.
+ * Creates the exif derivative from the given audio file.
+ *
+ * @param string $file_uri
+ *   The URI to the audio file the derivative will be generated from.
+ *
+ * @return string
+ *   A URI to the generated derivative if successful, FALSE otherwise.
  */
-function islandora_audio_create_exif($file_object) {
+function islandora_audio_create_exif ($file_uri) {
   $output = array();
-  $file = drupal_realpath($file_object->uri);
-  $outfile = $file . "_exif.xml";
-  $command_string = "exiftool -X " . $file;
-  $return_value = FALSE;
-  exec($command_string, $output, $return_value);
-  if ($return_value == '0') {
-    // succeeded in creating derivative exif
-//    file_put_contents($outfile, implode("\n", $output));
+  $file = drupal_realpath($file_uri);
+  $outfile = $file . '_exif.xml';
+  $command_string = "exiftool -X $file > $outfile";
+  $ret = FALSE;
+  exec($command_string, $output, $ret);
+  if ($ret == '0') {
     return $outfile;
   }
   return FALSE;
 }
 
 /**
- * adds a datastream and deletes the tmp file from the local file system
- * @param object $object
- * @param string $dsid
- * @param object $file
+ * Adds the given file as a datastream to the given object using the given datastream id to identify it.
+ *
+ * @param FedoraObject $object
+ *   The object to add the datasteam to.
+ * @param string $datastream_id
+ *   The datastream id of the added datastream.
+ * @param string $file_uri
+ *   A URI to the file containing the content for the datastream.
  */
-function islandora_audio_add_datastream($object, $dsid, $file) {
+function islandora_audio_add_datastream($object, $datastream_id, $file_uri) {
   try {
-    $mime_detector_thingy = new MimeDetect(); // this class is wrong - it should be a singleton
-    $ds = $object->constructDatastream($dsid, "M");
-    $ds->label = $dsid;
-    $ds->mimetype = $mime_detector_thingy->getMimetype($file);
-    $ds->setContentFromFile(drupal_realpath($file));
+    $mime_detector = new MimeDetect();
+    $ds = $object->constructDatastream($datastream_id, "M");
+    $ds->label = $datastream_id;
+    $ds->mimetype = $mime_detector->getMimetype($file_uri);
+    $ds->setContentFromFile(drupal_realpath($file_uri), FALSE);
     $object->ingestDatastream($ds);
-//    file_delete($file);
   }
   catch (exception $e) {
     drupal_set_message(t("@message", array("@message" => $e->getMessage())));
