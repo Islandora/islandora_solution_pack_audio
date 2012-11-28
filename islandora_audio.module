@@ -146,6 +146,7 @@ function islandora_audio_preprocess_islandora_audio(array &$variables) {
   $islandora_object = $variables['islandora_object'];
   $repository = $islandora_object->repository;
   module_load_include('inc', 'islandora', 'includes/datastream');
+  module_load_include('inc', 'islandora', 'includes/utilities');
   try {
     $dc = $islandora_object['DC']->content;
     $dc_object = DublinCore::import_from_xml_string($dc);
