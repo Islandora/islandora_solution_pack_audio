@@ -33,7 +33,7 @@ function islandora_audio_islandora_required_objects() {
       'title' => 'Islandora audio',
       'objects' => array(
         array(
-          'pid' => 'islandora:sp-audioCModel',
+          'pid' => 'islandora:sp_audioCModel',
           'label' => 'Islandora audio content model',
           'cmodel' => 'fedora-system:ContentModel-3.0',
           'datastreams' => array(
@@ -95,6 +95,7 @@ function islandora_audio_islandora_sp_audioCModel_islandora_ingest_post_ingest($
   module_load_include('inc', 'islandora_audio', 'includes/islandora_audio.process');
   islandora_audio_create_all_derivatives($object);
 }
+
 
 /**
  * Implements hook_islandora_xml_form_builder_forms().

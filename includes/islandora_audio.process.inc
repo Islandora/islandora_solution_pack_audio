@@ -3,7 +3,8 @@
 /**
  * @file
  *
- * This file contains all functions used to generate derivatives of audio objects.
+ * This file contains all functions used to generate derivatives of audio
+ * objects.
  */
 
 /**
@@ -15,7 +16,7 @@
  * @return boolean
  *   TRUE if successful, FALSE otherwise.
  */
-function islandora_audio_create_all_derivatives($object) {
+function islandora_audio_create_all_derivatives(FedoraObject $object) {
   if (!isset($object["OBJ"])) {
     drupal_set_message(t("Could not create derivatives for %s.  No file was uploaded.", array("%s" => $object->id), "error"));
     return FALSE;
@@ -48,9 +49,10 @@ function islandora_audio_create_mp3($file_uri) {
   $output = array();
   $file = drupal_realpath($file_uri);
   $outfile = $file . '.mp3';
-  $command_string = "lame -V5 --vbr-new '${file}' '${outfile}'";
+  $lame_url = variable_get('islandora_lame_url', '/usr/bin/lame');
+  $command = "$lame_url -V5 --vbr-new '${file}' '${outfile}'";
   $ret = FALSE;
-  exec($command_string, $output, $ret);
+  exec($command, $output, $ret);
   if ($ret == '0') {
     return $outfile;
   }
@@ -66,13 +68,13 @@ function islandora_audio_create_mp3($file_uri) {
  * @return string
  *   A URI to the generated derivative if successful, FALSE otherwise.
  */
-function islandora_audio_create_exif ($file_uri) {
+function islandora_audio_create_exif($file_uri) {
   $output = array();
   $file = drupal_realpath($file_uri);
   $outfile = $file . '_exif.xml';
-  $command_string = "exiftool -X $file > $outfile";
+  $command = "exiftool -X $file > $outfile";
   $ret = FALSE;
-  exec($command_string, $output, $ret);
+  exec($command, $output, $ret);
   if ($ret == '0') {
     return $outfile;
   }
@@ -95,7 +97,7 @@ function islandora_audio_add_datastream($object, $datastream_id, $file_uri) {
     $ds = $object->constructDatastream($datastream_id, "M");
     $ds->label = $datastream_id;
     $ds->mimetype = $mime_detector->getMimetype($file_uri);
-    $ds->setContentFromFile(drupal_realpath($file_uri), FALSE);
+    $ds->setContentFromFile(drupal_realpath($file_uri));
     $object->ingestDatastream($ds);
   }
   catch (exception $e) {
