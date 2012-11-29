@@ -11,20 +11,7 @@
  * @return string
  */
 function islandora_audio_sp_requirements($phase) {
-
   $requirements = array();
-
-  if ($phase == 'install') {
-    module_load_include('inc', 'islandora', 'includes/tuque');
-    if (!IslandoraTuque::exists()) {
-      $requirements[] = array(
-        'title' => 'Tuque',
-        'description' => 'The Islandora Collection solution pack requires the Tuque library.',
-        'severity' => REQUIREMENT_ERROR,
-      );
-    }
-  }
-
   $lame = array();
   $lame['title'] = t("Lame in \$PATH");
   $result = exec('which lame');
@@ -38,7 +25,6 @@ function islandora_audio_sp_requirements($phase) {
     $lame['severity'] = REQUIREMENT_OK;
   }
   $requirements[] = $lame;
-
   return $requirements;
 }
 
@@ -47,7 +33,6 @@ function islandora_audio_sp_requirements($phase) {
  */
 function islandora_audio_install() {
   module_load_include('inc', 'islandora', 'includes/solution_packs');
-  // install solution pack object(s)
   islandora_install_solution_pack('islandora_audio');
 }
 
@@ -56,13 +41,7 @@ function islandora_audio_install() {
  */
 function islandora_audio_uninstall() {
   module_load_include('inc', 'islandora', 'includes/solution_packs');
-  // uninstall procedure
   islandora_install_solution_pack('islandora_audio', 'uninstall');
-  // remove variables
-  $variables = array(
-    'islandora_audio_viewers',
-  );
-  foreach ($variables as $variable) {
-    variable_del($variable);
-  }
+  $variables = array('islandora_audio_viewers');
+  array_walk($variables, 'variable_del');
 }
