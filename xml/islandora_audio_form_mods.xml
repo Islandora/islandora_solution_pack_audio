@@ -13,26 +13,10 @@
     <properties>
       <type>form</type>
       <access>true</access>
-      <attributes>
-        <enctype>multipart/form-data</enctype>
-      </attributes>
       <required>false</required>
       <tree>true</tree>
     </properties>
     <children>
-      <element name="ingest-file-location">
-        <properties>
-          <type>file</type>
-          <access>true</access>
-          <attributes>
-            <enctype>multipart/form-data</enctype>
-          </attributes>
-          <description>Select audio file to upload.</description>
-          <required>false</required>
-          <tree>true</tree>
-        </properties>
-        <children/>
-      </element>
       <element name="titleInfo">
         <properties>
           <type>markup</type>
@@ -1260,16 +1244,6 @@
             </children>
           </element>
         </children>
-      </element>
-      <element name="submit">
-        <properties>
-          <type>submit</type>
-          <access>true</access>
-          <required>false</required>
-          <tree>true</tree>
-          <value>Submit</value>
-        </properties>
-        <children/>
       </element>
       <element name="Ingest">
         <properties>

@@ -1,106 +1,39 @@
 <?php
 
-/*
+/**
  * @file
- * An Islandora module to handle audio cmodels
+ *
+ * Handles the creation/display of islandora:sp-audioCModel objects.
  */
 
 /**
  * Implements hook_menu().
- * If you need to add secondary tabs to either view or manage you would create a
- * hook_menu function similar to below.  You would also need to create an access function
- * to tell islandora when to show your tabs.  There is an example below.
  */
 function islandora_audio_menu() {
-  $items = array();
-  $items['admin/islandora/audio'] = array(
-    'title' => 'Audio collection',
-    'description' => 'Configure the Audio solution pack.',
-    'page callback' => 'drupal_get_form',
-    'access arguments' => array('administer site configuration'),
-    'page arguments' => array('islandora_audio_admin'),
-    'file' => 'admin/islandora_audio.admin.inc',
-    'type' => MENU_NORMAL_ITEM,
+  return array(
+    'admin/islandora/audio' => array(
+      'title' => 'Audio collection',
+      'description' => 'Configure the Audio solution pack.',
+      'page callback' => 'drupal_get_form',
+      'access arguments' => array('administer site configuration'),
+      'page arguments' => array('islandora_audio_admin'),
+      'file' => 'admin/islandora_audio.admin.inc',
+      'type' => MENU_NORMAL_ITEM,
+    )
   );
-  /* example menu paths
-    $items['islandora/object/%/manage/audio'] = array(
-    'title' => 'Manage Audio Types',
-    'page callback' => 'islandora_audio_manage_object',
-    'page arguments' => array(2),
-    'type' => MENU_LOCAL_TASK,
-    'access callback' => 'islandora_audio_access',
-    'access arguments' => array(2),
-    );
-
-    $items['islandora/object/%/view/audio'] = array(
-    'title' => 'Audio Player 1',
-    'page callback' => 'islandora_audio_view1',
-    'page arguments' => array(2),
-    'type' => MENU_LOCAL_TASK,
-    'access callback' => 'islandora_audio_access',
-    'access arguments' => array(2),
-    );
-    $items['islandora/object/%/view/audio2'] = array(
-    'title' => 'Audio Player 2',
-    'page callback' => 'islandora_audio_view2',
-    'page arguments' => array(2),
-    'type' => MENU_LOCAL_TASK,
-    'access callback' => 'islandora_audio_access',
-    'access arguments' => array(2),
-    ); */
-  return $items;
 }
-
-/**
- * an example of adding a new managment section to the manage section of islandora.
- * The islandora_audio_access function determines whether or not to show this
- * section.
- *
- * This is an example function used by hook_menu above.
- * @param string $object_id
- * @return string
- */
-/*
-  function islandora_audio_manage_object($object_id){
-  return 'Audio CModel edit function '.$object_id;
-  } */
-
-/**
- * /**
- * An example function used by hook_menu
- * /
- * @param type $object_id
- * @return string
- */
-/*
-  function islandora_audio_view1($object_id){
-  return 'A view returned by the audio cmodel';
-  } */
-
-/**
- * An example function needed by this modules hook_menu
- * @param type $object_id
- * @return string
- */
-/*
-  function islandora_audio_view2($object_id){
-  return 'Another view returned by the audio cmodel';
-  } */
 
 /**
  * Implements hook_islandora_required_objects().
  */
 function islandora_audio_islandora_required_objects() {
-
-  // module path
   $module_path = drupal_get_path('module', 'islandora_audio');
-
   return array(
     'islandora_audio' => array(
       'title' => 'Islandora audio',
       'objects' => array(
         array(
-          'pid' => 'islandora:sp-audioCModel',
+          'pid' => 'islandora:sp_audioCModel',
           'label' => 'Islandora audio content model',
           'cmodel' => 'fedora-system:ContentModel-3.0',
           'datastreams' => array(
@@ -155,13 +88,14 @@ function islandora_audio_islandora_sp_audioCModel_islandora_view_object($object,
   return array('' => $output);
 }
 
-/** 
+/**
  * Implements hook_CMODEL_PID_islandora_ingest_post_ingest().
  */
 function islandora_audio_islandora_sp_audioCModel_islandora_ingest_post_ingest($object) {
   module_load_include('inc', 'islandora_audio', 'includes/islandora_audio.process');
   islandora_audio_create_all_derivatives($object);
 }
+
 
 /**
  * Implements hook_islandora_xml_form_builder_forms().
@@ -184,7 +118,7 @@ function islandora_audio_islandora_content_model_forms_form_associations() {
       'content_model' => 'islandora:sp-audioCModel',
       'form_name' => 'Audio MODS form',
       'dsid' => 'MODS',
-      'title_field' => "['titleInfo']['title']",
+      'title_field' => array('titleInfo', 'title'),
       'transform' => 'mods_to_dc.xsl',
       'template' => FALSE,
     ),
@@ -192,41 +126,31 @@ function islandora_audio_islandora_content_model_forms_form_associations() {
 }
 
 /**
- * Theme registry function
- * We supply a pattern so we can overide templates at the theme level if needed.
- * we can append a pid to a template and the new template file will be called (the pids
- * colon should be replaced with a dash)
- * @return array
+ * Implements hook_theme().
  */
 function islandora_audio_theme($existing, $type, $theme, $path) {
   return array(
     'islandora_audio' => array(
       'template' => 'theme/islandora-audio',
-      'pattern' => 'islandora_audio__', //we can add pids to the end of this pattern in our preprocess function
-      // and templates will be able to have have a pid appended to the template name to overide a template on a per object basis
-      //an example template would be named islandora-audio--islandora-27.tpl.phps
+      'pattern' => 'islandora_audio__',
       'variables' => array('islandora_object' => NULL),
     )
   );
 }
 
 /**
- *
- * @global type $base_url
- * @param array $variables
- *   an array of variables that will be passed to the theme function
+ * Implements template_preprocess_hook().
  */
-function islandora_audio_preprocess_islandora_audio(&$variables) {
+function islandora_audio_preprocess_islandora_audio(array &$variables) {
   drupal_add_js('misc/form.js');
   drupal_add_js('misc/collapse.js');
   $islandora_object = $variables['islandora_object'];
   $repository = $islandora_object->repository;
-  module_load_include('inc', 'islandora', 'includes/islandora_dublin_core');
   module_load_include('inc', 'islandora', 'includes/datastream');
-
+  module_load_include('inc', 'islandora', 'includes/utilities');
   try {
     $dc = $islandora_object['DC']->content;
-    $dc_object = Dublin_Core::import_from_xml_string($dc);
+    $dc_object = DublinCore::import_from_xml_string($dc);
   } catch (Exception $e) {
     drupal_set_message(t('Error retrieving object %s %t', array('%s' => $islandora_object->id, '%t' => $e->getMessage())), 'error', FALSE);
   }
@@ -234,7 +158,7 @@ function islandora_audio_preprocess_islandora_audio(&$variables) {
   $variables['dc_array'] = isset($dc_object) ? $dc_object->as_formatted_array() : array();
   $variables['islandora_object_label'] = $islandora_object->label;
   $variables['theme_hook_suggestions'][] = 'islandora_audio__' . str_replace(':', '_', $islandora_object->id);
-  $variables['parent_collections'] = islandora_datastream_get_parents($islandora_object);
+  $variables['parent_collections'] = islandora_get_parents_from_rels_ext($islandora_object);
   // set title
   if ($islandora_object->label) {
     drupal_set_title($islandora_object->label);
@@ -267,4 +191,19 @@ function islandora_audio_preprocess_islandora_audio(&$variables) {
   else {
     $variables['islandora_content'] = l($islandora_object->label, $audio_url);
   }
+}
+
+/**
+ * Implements hook_islandora_ingest_steps().
+ */
+function islandora_audio_islandora_sp_audiocmodel_islandora_ingest_steps(array $configuration) {
+  return array(
+    array(
+      'weight' => 10,
+      'type' => 'form',
+      'form_id' => 'islandora_audio_audio_upload_form',
+      'module' => 'islandora_audio',
+      'file' => 'includes/audio_upload.form.inc'
+    )
+  );
 }
