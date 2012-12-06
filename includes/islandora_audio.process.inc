@@ -28,9 +28,6 @@ function islandora_audio_create_all_derivatives(FedoraObject $object) {
   if (($mp3_uri = islandora_audio_create_mp3($file_uri)) !== FALSE) {
     islandora_audio_add_datastream($object, 'PROXY_MP3', $mp3_uri);
   }
-  if (($exif_uri = islandora_audio_create_exif($file_uri)) !== FALSE) {
-    islandora_audio_add_datastream($object, 'TECHMD', $exif_uri);
-  }
   file_unmanaged_delete($file_uri);
   islandora_audio_add_datastream($object, 'TN', drupal_get_path('module', 'islandora_audio') . '/images/audio-TN.jpg');
   return TRUE;
@@ -51,28 +48,6 @@ function islandora_audio_create_mp3($file_uri) {
   $outfile = $file . '.mp3';
   $lame_url = variable_get('islandora_lame_url', '/usr/bin/lame');
   $command = "$lame_url -V5 --vbr-new '${file}' '${outfile}'";
-  $ret = FALSE;
-  exec($command, $output, $ret);
-  if ($ret == '0') {
-    return $outfile;
-  }
-  return FALSE;
-}
-
-/**
- * Creates the exif derivative from the given audio file.
- *
- * @param string $file_uri
- *   The URI to the audio file the derivative will be generated from.
- *
- * @return string
- *   A URI to the generated derivative if successful, FALSE otherwise.
- */
-function islandora_audio_create_exif($file_uri) {
-  $output = array();
-  $file = drupal_realpath($file_uri);
-  $outfile = $file . '_exif.xml';
-  $command = "exiftool -X $file > $outfile";
   $ret = FALSE;
   exec($command, $output, $ret);
   if ($ret == '0') {

@@ -24,7 +24,6 @@ files through the Islandora interface
 REQUIREMENTS
 ------------
 
-Exiftool - http://www.sno.phy.queensu.ca/~phil/exiftool/
 Lame - http://lame.sourceforge.net
 
 INSTALLATION
@@ -32,7 +31,6 @@ INSTALLATION
 
 Ubuntu:
  * sudo apt-get install lame
- * sudo apt-get install libimage-exiftool-perl
 
 CONFIGURATION
 -------------
