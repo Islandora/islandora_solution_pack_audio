@@ -26,57 +26,51 @@ function islandora_audio_menu() {
 /**
  * Implements hook_islandora_required_objects().
  */
-function islandora_audio_islandora_required_objects() {
+function islandora_audio_islandora_required_objects(IslandoraTuque $connection) {
   $module_path = drupal_get_path('module', 'islandora_audio');
+  // Audio Content Model
+  $audio_content_model = $connection->repository->constructObject('islandora:sp_audioCModel');
+  $audio_content_model->owner = 'fedoraAdmin';
+  $audio_content_model->label = 'Islandora Audio Content Model';
+  $audio_content_model->models = 'fedora-system:ContentModel-3.0';
+  // ISLANDORACM Datastream
+  $datastream = $audio_content_model->constructDatastream('ISLANDORACM', 'X');
+  $datastream->label = 'Islandora content model';
+  $datastream->mimetype = 'text/xml';
+  $datastream->setContentFromFile("$module_path/xml/islandora_audio_content_model.xml", FALSE);
+  $audio_content_model->ingestDatastream($datastream);
+  // DS-COMPOSITE-MODEL Datastream
+  $datastream = $audio_content_model->constructDatastream('DS-COMPOSITE-MODEL', 'X');
+  $datastream->label = 'DS-COMPOSITE-MODEL';
+  $datastream->mimetype = 'text/xml';
+  $datastream->setContentFromFile("$module_path/xml/islandora_audio_ds_composite_model.xml", FALSE);
+  $audio_content_model->ingestDatastream($datastream);
+  // Audio Collection
+  $audio_collection = $connection->repository->constructObject('islandora:audio_collection');
+  $audio_collection->owner = 'fedoraAdmin';
+  $audio_collection->label = 'Audio Collection';
+  $audio_collection->models = 'islandora:collectionCModel';
+  $audio_collection->relationships->add(FEDORA_RELS_EXT_URI, 'isMemberOfCollection', 'islandora:root');
+  // Collection Policy Datastream
+  $datastream = $audio_collection->constructDatastream('COLLECTION_POLICY', 'X');
+  $datastream->label = 'Collection policy';
+  $datastream->mimetype = 'text/xml';
+  $datastream->setContentFromFile("$module_path/xml/islandora_audio_collection_policy.xml", FALSE);
+  $audio_collection->ingestDatastream($datastream);
+  // TN Datastream
+  $datastream = $audio_collection->constructDatastream('TN', 'M');
+  $datastream->label = 'Thumbnail';
+  $datastream->mimetype = 'image/png';
+  $datastream->setContentFromFile("$module_path/images/folder.png", FALSE);
+  $audio_collection->ingestDatastream($datastream);
   return array(
     'islandora_audio' => array(
       'title' => 'Islandora audio',
       'objects' => array(
-        array(
-          'pid' => 'islandora:sp_audioCModel',
-          'label' => 'Islandora audio content model',
-          'cmodel' => 'fedora-system:ContentModel-3.0',
-          'datastreams' => array(
-            array(
-              'dsid' => 'ISLANDORACM',
-              'label' => 'Islandora content model',
-              'mimetype' => 'text/xml',
-              'control_group' => 'X',
-              'datastream_file' => "$module_path/xml/islandora_audio_content_model.xml",
-            ),
-            array(
-              'dsid' => 'DS-COMPOSITE-MODEL',
-              'label' => 'DS-COMPOSITE-MODEL',
-              'mimetype' => 'text/xml',
-              'control_group' => 'X',
-              'datastream_file' => "$module_path/xml/islandora_audio_ds_composite_model.xml",
-            ),
-          ),
-        ),
-        array(
-          'pid' => 'islandora:audio_collection',
-          'label' => 'Audio collection',
-          'cmodel' => 'islandora:collectionCModel',
-          'parent' => 'islandora:root',
-          'datastreams' => array(
-            array(
-              'dsid' => 'COLLECTION_POLICY',
-              'label' => 'Collection policy',
-              'mimetype' => 'text/xml',
-              'control_group' => 'X',
-              'datastream_file' => "$module_path/xml/islandora_audio_collection_policy.xml",
-            ),
-            array(
-              'dsid' => 'TN',
-              'label' => 'Thumbnail',
-              'mimetype' => 'image/png',
-              'control_group' => 'M',
-              'datastream_file' => "$module_path/images/folder.png",
-            ),
-          ),
-        ),
-      ),
-    ),
+        $audio_content_model,
+        $audio_collection
+      )
+    )
   );
 }
 
