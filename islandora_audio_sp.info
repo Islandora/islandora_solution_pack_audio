@@ -5,5 +5,5 @@ dependencies[] = swftools
 dependencies[] = swftools_jw5
 dependencies[] = swftools_swfobject2
 package = Islandora Solution Pack
-version = 6.x-12.1-RC1
+version = 6.x-12.1.0
 core = 6.x
