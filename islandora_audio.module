@@ -83,9 +83,9 @@ function islandora_audio_islandora_sp_audioCModel_islandora_view_object($object,
 }
 
 /**
- * Implements hook_CMODEL_PID_islandora_ingest_post_ingest().
+ * Implements hook_CMODEL_PID_islandora_object_ingested().
  */
-function islandora_audio_islandora_sp_audioCModel_islandora_ingest_post_ingest($object) {
+function islandora_audio_islandora_sp_audioCModel_islandora_object_ingested($object) {
   module_load_include('inc', 'islandora_audio', 'includes/islandora_audio.process');
   islandora_audio_create_all_derivatives($object);
 }
