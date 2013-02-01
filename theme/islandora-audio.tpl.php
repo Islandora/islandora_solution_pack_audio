@@ -5,7 +5,6 @@
  * This is the template file for the object page for audio file
  *
  * @TODO: add documentation about file and available variables
-*  @TODO: drupal_set_title shouldn't be called here
  */
 ?>
 
