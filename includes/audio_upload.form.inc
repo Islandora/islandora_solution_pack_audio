@@ -2,7 +2,6 @@
 
 /**
  * @file
- *
  * Handles the uploading of the audio file as part of the ingest process.
  */
 
@@ -10,14 +9,15 @@
  * Defines a file upload form for uploading the audio file.
  *
  * @param array $form
- *   The drupal form.
+ *   The Drupal form.
  * @param array $form_state
- *   The drupal form state.
- * @return
+ *   The Drupal form state.
+ *
+ * @return array
  *   The drupal form definition.
  */
 function islandora_audio_audio_upload_form(array $form, array &$form_state) {
-  $upload_size = min((int)ini_get('post_max_size'), (int)ini_get('upload_max_filesize'));
+  $upload_size = min((int) ini_get('post_max_size'), (int) ini_get('upload_max_filesize'));
   $extensions = array('wav mp3');
   return array(
     'file' => array(
@@ -29,9 +29,10 @@ function islandora_audio_audio_upload_form(array $form, array &$form_state) {
       '#upload_location' => 'temporary://',
       '#upload_validators' => array(
         'file_validate_extensions' => $extensions,
-        'file_validate_size' => array($upload_size * 1024 * 1024), // Assume its specified in MB
+         // Assume its specified in MB.
+        'file_validate_size' => array($upload_size * 1024 * 1024),
       ),
-    )
+    ),
   );
 }
 
@@ -39,9 +40,9 @@ function islandora_audio_audio_upload_form(array $form, array &$form_state) {
  * Addes the uploaded file into the ingestable objects 'OBJ' datastream.
  *
  * @param array $form
- *   The drupal form.
+ *   The Drupal form.
  * @param array $form_state
- *   The drupal form state.
+ *   The Drupal form state.
  */
 function islandora_audio_audio_upload_form_submit(array $form, array &$form_state) {
   $object = $form_state['islandora']['objects'][0];
