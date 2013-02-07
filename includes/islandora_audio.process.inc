@@ -2,9 +2,7 @@
 
 /**
  * @file
- *
- * This file contains all functions used to generate derivatives of audio
- * objects.
+ * This file contains functions used to generate derivatives of audio objects.
  */
 
 /**
@@ -13,7 +11,7 @@
  * @param FedoraObject $object
  *   The object that will be used to generate/store the derivatives.
  *
- * @return boolean
+ * @return bool
  *   TRUE if successful, FALSE otherwise.
  */
 function islandora_audio_create_all_derivatives(FedoraObject $object) {
@@ -58,7 +56,7 @@ function islandora_audio_create_mp3($file_uri) {
 }
 
 /**
- * Adds the given file as a datastream to the given object using the given datastream id to identify it.
+ * Adds the given file as a datastream to the given object.
  *
  * @param FedoraObject $object
  *   The object to add the datasteam to.

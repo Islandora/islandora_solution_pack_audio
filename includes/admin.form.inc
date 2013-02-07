@@ -2,104 +2,63 @@
 
 /**
  * @file
- * This file contains all admin functions
+ * Handles the display/submission of the admin settings form for this module.
  */
-function islandora_audio_admin($form, &$form_state) {
-  // add css
-  drupal_add_css(drupal_get_path('module', 'islandora_audio') . '/css/islandora_audio.admin.css');
 
-  if (isset($form_state['values']['islandora_lame_url'])) {
-    $lame_url = $form_state['values']['islandora_lame_url'];
-  }
-  else {
-    $lame_url = variable_get('islandora_lame_url', '/usr/bin/lame');
-  }
-  exec($lame_url, $output, $return_value);
-  $confirmation_message = '<img src="' . url('misc/watchdog-ok.png') . '"/>'
-      . t('LAME executable found at !lame_url', array('!lame_url' => "<strong>$lame_url</strong>"));
-  if ($return_value != 1) {
-    $confirmation_message = '<img src="' . url('misc/watchdog-error.png') . '"/> '
-        . t('Unable to find LAME executable at !lame_url', array('!lame_url' => "<strong>$lame_url</strong>"));
-  }
-  $form = array();
-  $forms['islandora_lame_url'] = array(
-    '#prefix' => '<div id = "lame_url">',
-    '#suffix' => '</div>',
-    '#type' => 'textfield',
-    '#description' => t("This module requires !LAME to create derivative files", array('!LAME' => l(t('LAME'), 'http://lame.sourceforge.net/'))),
-    '#default_value' => $lame_url,
-    '#size' => 20
-  );
-
-  // ajax wrapper for url checking
-  $form['wrapper'] = array(
-    '#prefix' => '<div id="islandora-url">',
-    '#suffix' => '</div>',
-    '#type' => 'markup',
-  );
-
-  $form['wrapper']['islandora_lame_url'] = array(
-    '#type' => 'textfield',
-    '#title' => t("Path to LAME"),
-    '#default_value' => $lame_url,
-    '#description' => t('Path to !LAME <br /> !confirmation_message',
-        array(
-          '!confirmation_message' => $confirmation_message,
-          '!LAME' => l(t('LAME'), 'http://lame.sourceforge.net/')
-    )),
-    '#required' => TRUE,
-    '#ajax' => array(
-      'callback' => 'islandora_update_lame_url_div',
-      'wrapper' => 'islandora-url',
-      'effect' => 'fade',
-      'event' => 'blur',
-      'progress' => array('type' => 'throbber'),
+/**
+ * Defines the admin settings form.
+ *
+ * @param array $form
+ *   The Drupal form definition.
+ * @param array $form_state
+ *   The Drupal form state.
+ *
+ * @return array
+ *   The Drupal form definition.
+ */
+function islandora_audio_admin(array $form, array &$form_state) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
+  $get_default_value = function($name, $default) use(&$form_state) {
+    return isset($form_state['values'][$name]) ? $form_state['values'][$name] : variable_get($name, $default);
+  };
+  $lame = $get_default_value('islandora_lame_url', '/usr/bin/lame');
+  $form = array(
+    'islandora_lame_url' => array(
+      '#type' => 'textfield',
+      '#title' => t("Path to LAME"),
+      '#description' => t('!LAME is required to create derivatives files.<br/>!msg',
+                      array(
+                        '!LAME' => l(t('LAME'), 'http://lame.sourceforge.net/'),
+                        '!msg' => islandora_executable_available_message($lame),
+                      )),
+      '#default_value' => $lame,
+      '#size' => 20,
+      '#prefix' => '<div id="lame-wrapper">',
+      '#suffix' => '</div>',
+      '#ajax' => array(
+        'callback' => 'islandora_audio_admin_form_lame_ajax_callback',
+        'wrapper' => 'lame-wrapper',
+        'effect' => 'fade',
+        'event' => 'change',
+      ),
     ),
   );
-
-  // include solution packs inc file
   module_load_include('inc', 'islandora', 'includes/solution_packs');
-  // get viewer table
-  $viewer_table = islandora_viewers_form('islandora_audio_viewers', 'audio/mpeg');
-  // add viewer table
-  $form += $viewer_table;
-
-  // actions
-  $form['actions'] = array(
-    '#type' => 'actions'
-  );
-  $form['actions']['reset'] = array(
-    '#type' => 'submit',
-    '#value' => t('Reset to defaults'),
-    '#weight' => 1,
-    '#submit' => array('islandora_audio_admin_submit'),
-  );
-
+  $form += islandora_viewers_form('islandora_audio_viewers', 'audio/mpeg');
   return system_settings_form($form);
 }
 
 /**
- * Form validate
+ * Ajax callback for the Lame textfield.
+ *
+ * @param array $form
+ *   The Drupal form definition.
+ * @param array $form_state
+ *   The Drupal form state.
+ *
+ * @return array
+ *   The element to render as part the ajax callback.
  */
-function islandora_audio_admin_validate($form, &$form_state) {
-
-}
-
-/**
- * Form submit
- */
-function islandora_audio_admin_submit($form, &$form_state) {
-  $op = $form_state['clicked_button']['#id'];
-  switch ($op) {
-    case 'edit-reset':
-      variable_del('islandora_audio_viewers');
-      break;
-  }
-}
-
-function islandora_update_lame_url_div($form, $form_state) {
-  unset($form_state['submit_handlers']);
-  $form_state['rebuild'] = TRUE;
-
-  return $form['wrapper'];
+function islandora_audio_admin_form_lame_ajax_callback(array $form, array $form_state) {
+  return $form['islandora_lame_url'];
 }
