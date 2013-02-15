@@ -28,7 +28,7 @@ function islandora_audio_menu() {
 function islandora_audio_islandora_required_objects(IslandoraTuque $connection) {
   $module_path = drupal_get_path('module', 'islandora_audio');
   // Audio Content Model.
-  $audio_content_model = $connection->repository->constructObject('islandora:sp_audioCModel');
+  $audio_content_model = $connection->repository->constructObject('islandora:sp-audioCModel');
   $audio_content_model->owner = 'fedoraAdmin';
   $audio_content_model->label = 'Islandora Audio Content Model';
   $audio_content_model->models = 'fedora-system:ContentModel-3.0';
