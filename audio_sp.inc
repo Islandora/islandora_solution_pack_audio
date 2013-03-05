@@ -109,10 +109,12 @@ class AudioManipulation {
     $return_value = TRUE;
 
     $output = array();
-    $command_string = "lame -V5 --vbr-new '${file}' '${file}.mp3'";
+    //want to use the variable from the admin page.  If there is none then use the default lame
+    $lame = variable_get('islandora_lame_path', 'lame');
+    $command_string = "$lame -V5 --vbr-new '${file}' '${file}.mp3'";
 
     exec($command_string, $output, $returnValue);
-
+ 
     if ($returnValue == '0') {
       $_SESSION['fedora_ingest_files']["PROXY_MP3"] = $file . '.mp3';
       $stored_thumbnail = drupal_get_path('module', 'islandora_audio_sp') . '/images/audio-TN.jpg';

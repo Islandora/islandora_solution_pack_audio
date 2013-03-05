@@ -3,6 +3,29 @@
 /**
  * Islandora audio solution pack module
  */
+// $Id$
+function islandora_audio_sp_menu() {
+  $items['admin/settings/islandora_audio_sp'] = array(
+    'title' => 'Islandora Audio Solution Pack Admin',
+    'description' => 'Configure Islandora Audio Module',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('islandora_audio_admin_settings'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'islandora_audio.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  $items['islandora/audio/lame'] = array(
+    'page callback' => 'update_lame_div',
+    'access arguments' => array('view fedora collection'),
+    'file' => 'islandora_audio.admin.inc',
+    'type' => MENU_CALLBACK,
+  );
+  
+  return $items;
+}
+
+
 
 /**
  * Implements hook_fedora_repository_required_fedora_objects
