@@ -3,5 +3,5 @@ description = "A default Islandora Repository module to handle audio files"
 dependencies[] = islandora
 package = Islandora
 core = 7.x
-version = 7.x-1.1-RC2
+version = 7.x-1.1
 configure = admin/islandora/audio
