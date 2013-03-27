@@ -8,7 +8,6 @@
 
 function islandora_audio_admin_settings(&$form_state) {
 
-
   $lame_path = isset($form_state['values']['islandora_audio_lame_path']) ? $form_state['values']['islandora_audio_lame_path'] : variable_get('islandora_audio_lame_path', '/usr/bin/lame');
   $lame_avail = exec("ls $lame_path");
 
@@ -31,11 +30,11 @@ function islandora_audio_admin_settings(&$form_state) {
     '#type' => 'checkbox',
     '#title' => t('Transform files locally ?'),
     '#description' => t('Leave this box checked unless processing of files is done on an external server.'),
-    '#default_value' => variable_get($lame, TRUE),
+    '#default_value' => $lame,
     '#ahah' => array(
       'path' => 'islandora/audio/lame',
       'wrapper' => 'iaudio-url',
-      'effect' => 'fade',
+      'effect' => 'none',
       'event' => 'change'),
   );
 
@@ -61,11 +60,11 @@ function islandora_audio_admin_settings(&$form_state) {
       '#type' => 'textfield',
       '#title' => t('Path to LAME executable'),
       '#description' => t('Path to LAME program on your server'),
-      '#default_value' => variable_get('islandora_audio_lame_path', '/usr/bin/lame'),
+      '#default_value' => $lame_path,
       '#ahah' => array(
         'path' => 'islandora/audio/lame',
         'wrapper' => 'iaudio-url',
-        'effect' => 'fade',
+        'effect' => 'none',
         'event' => 'change'),
     );
 
