@@ -11,8 +11,8 @@
 function islandora_audio_menu() {
   return array(
     'admin/islandora/audio' => array(
-      'title' => 'Audio collection',
-      'description' => 'Configure the Audio solution pack.',
+      'title' => 'Audio Collection',
+      'description' => 'Configure the Audio Solution Pack.',
       'page callback' => 'drupal_get_form',
       'access arguments' => array('administer site configuration'),
       'page arguments' => array('islandora_audio_admin'),

@@ -1,4 +1,4 @@
-name = "Islandora audio"
+name = "Islandora Audio"
 description = "A default Islandora Repository module to handle audio files"
 dependencies[] = islandora
 package = Islandora
