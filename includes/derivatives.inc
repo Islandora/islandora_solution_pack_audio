@@ -16,7 +16,7 @@
  */
 function islandora_audio_create_all_derivatives(FedoraObject $object) {
   if (!isset($object["OBJ"])) {
-    drupal_set_message(t("Could not create derivatives for %s.  No file was uploaded.", array("%s" => $object->id), "error"));
+    drupal_set_message(t("Could not create derivatives for %s. No file was uploaded.", array("%s" => $object->id), "error"));
     return FALSE;
   }
   $mime_detect = new MimeDetect();
