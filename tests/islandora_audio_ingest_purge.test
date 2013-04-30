@@ -1,0 +1,72 @@
+<?php
+
+/**
+ * @file
+ * Attempts to ingest an audio file into a randomly generated audio collection.
+ */
+
+class IslandoraAudioIngestTestCase extends CollectionWebTestCase {
+
+  /**
+   * Get test information.
+   *
+   * @see IslandoraWebTestCase::getInfo()
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Audio Ingest/Purge',
+      'description' => 'Ingests and purges an audio file from a randomly generated audio collection',
+      'group' => 'Islandora Object Management',
+    );
+  }
+
+  /**
+   * Set up the test environment.
+   *
+   * @see IslandoraWebTestCase::setUp()
+   */
+  public function setUp() {
+    parent::setUp(array(
+      'islandora',
+      'islandora_audio',
+      'islandora_basic_collection',
+    ));
+  }
+
+  /**
+   * Creates an administrative user and attempts to ingest a test audio file.
+   */
+  public function testIngestPurgeAudio() {
+
+    // Sets up the testing space.
+    $user = $this->createDrupalAdminUser();
+    $this->drupalLogin($user);
+    $label = $this->randomName(16);
+    $suffix = $this->randomName(16);
+    $collectionpid = 'islandora:' . $suffix;
+    $this->createRootTestCollection($label, 'islandora:sp-audioCModel', $collectionpid);
+
+    // Attempts to create an object.
+    $path = 'islandora/object/' . $collectionpid . '/manage/overview/ingest';
+    $edit = array();
+    $file = drupal_get_path('module', 'islandora_audio') . '/tests/fixtures/test.wav';
+    $edit['files[file]'] = $file;
+    $this->drupalPost($path, $edit, t('Ingest'));
+    $this->assertText('New Object', 'Audio object was created', 'Islandora');
+
+    // Determines whether or not the appropriate datastreams were created.
+    $objectpid = arg(5, $this->url);
+    $datastreams = array(
+      'RELS-EXT',
+      'DC',
+      'OBJ',
+      'TN',
+      'PROXY_MP3',
+    );
+    $this->assertDatastreams($objectpid, $datastreams);
+
+    // Attempts to delete the object and then collection.
+    $this->deleteTestObject($objectpid, 'New Object');
+    $this->deleteRootTestCollectionByPid($collectionpid);
+  }
+}
