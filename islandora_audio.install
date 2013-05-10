@@ -25,7 +25,7 @@ function islandora_audio_requirements($phase) {
       'value' => $value,
       'description' => $description,
       'severity' => $severity,
-    )
+    ),
   );
 }
 
