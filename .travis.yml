@@ -14,7 +14,7 @@ before_install:
   - $HOME/islandora/tests/scripts/travis_setup.sh
   - cd $HOME/drupal-*
   - ln -s $TRAVIS_BUILD_DIR sites/all/modules/islandora_solution_pack_audio
-  - drush en --yes islandora_solution_pack_audio
+  - drush en --user=1 --yes islandora_solution_pack_audio
 script:
   - ant -buildfile sites/all/modules/islandora_solution_pack_audio/build.xml lint
   - $ISLANDORA_DIR/tests/scripts/line_endings.sh sites/all/modules/islandora_solution_pack_audio
