@@ -8,12 +8,16 @@ branches:
 env:
   - FEDORA_VERSION="3.5"
 before_install:
+  - sudo apt-get install -qq lame
   - cd $HOME
   - git clone -b 7.x git://github.com/Islandora/islandora.git
+  - git clone -b 7.x git://github.com/Islandora/islandora_solution_pack_collection.git
   - export ISLANDORA_DIR=$HOME/islandora
   - $HOME/islandora/tests/scripts/travis_setup.sh
   - cd $HOME/drupal-*
   - ln -s $TRAVIS_BUILD_DIR sites/all/modules/islandora_solution_pack_audio
+  - ln -s $HOME/islandora_solution_pack_collection sites/all/modules/islandora_solution_pack_collection
+  - drush en --user=1 --yes islandora_basic_collection
   - drush en --user=1 --yes islandora_audio
 script:
   - ant -buildfile sites/all/modules/islandora_solution_pack_audio/build.xml lint
