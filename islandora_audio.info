@@ -5,3 +5,4 @@ package = Islandora
 core = 7.x
 version = 7.x-dev
 configure = admin/islandora/audio
+files[] = tests/islandora_audio_ingest_purge.test
