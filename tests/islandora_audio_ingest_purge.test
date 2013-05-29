@@ -16,7 +16,7 @@ class IslandoraAudioIngestTestCase extends IslandoraCollectionWebTestCase {
     return array(
       'name' => 'Audio Ingest/Purge',
       'description' => 'Ingests and purges an audio file from a randomly generated audio collection',
-      'group' => 'Islandora Object Management',
+      'group' => 'Islandora Solution Pack Audio',
     );
   }
 
@@ -38,13 +38,16 @@ class IslandoraAudioIngestTestCase extends IslandoraCollectionWebTestCase {
    */
   public function testIngestPurgeAudio() {
 
-    // Sets up the testing space.
-    $user = $this->createDrupalAdminUser();
+    $user = $this->drupalCreateUser(array(
+      'view fedora repository objects',
+      'ingest fedora objects',
+    ));
     $this->drupalLogin($user);
+
     $label = $this->randomName(16);
     $suffix = $this->randomName(16);
     $collectionpid = 'islandora:' . $suffix;
-    $this->createRootTestCollection($label, 'islandora:sp-audioCModel', $collectionpid);
+    $this->createTestCollection($label, 'islandora:sp-audioCModel', $collectionpid);
 
     // Attempts to create an object.
     $path = 'islandora/object/' . $collectionpid . '/manage/overview/ingest';
@@ -55,7 +58,7 @@ class IslandoraAudioIngestTestCase extends IslandoraCollectionWebTestCase {
     $this->assertText('New Object', 'Audio object was created', 'Islandora');
 
     // Determines whether or not the appropriate datastreams were created.
-    $objectpid = arg(5, $this->url);
+    $object = $this->getObjectFromPath($this->url);
     $datastreams = array(
       'RELS-EXT',
       'DC',
@@ -63,10 +66,10 @@ class IslandoraAudioIngestTestCase extends IslandoraCollectionWebTestCase {
       'TN',
       'PROXY_MP3',
     );
-    $this->assertDatastreams($objectpid, $datastreams);
+    $this->assertDatastreams($object, $datastreams);
 
     // Attempts to delete the object and then collection.
-    $this->deleteTestObject($objectpid, 'New Object');
-    $this->deleteRootTestCollectionByPid($collectionpid);
+    $this->deleteObject($object->id);
+    $this->deleteTestCollection($collectionpid);
   }
 }
