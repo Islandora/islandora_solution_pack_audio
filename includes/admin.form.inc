@@ -43,8 +43,43 @@ function islandora_audio_admin(array $form, array &$form_state) {
       ),
     ),
   );
+
+  // Viewers.
   module_load_include('inc', 'islandora', 'includes/solution_packs');
   $form += islandora_viewers_form('islandora_audio_viewers', 'audio/mpeg');
+
+  // Checksumming.
+  $form['islandora_audio_checksum_configuration'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Checksum configuration'),
+  );
+
+  $form['islandora_audio_checksum_configuration']['islandora_audio_enable_checksum'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable checksum'),
+    '#description' => t('Enables checksum creation on the OBJ datastream for digital preservation purposes.'),
+    '#default_value' => variable_get('islandora_audio_enable_checksum', FALSE),
+  );
+
+  $form['islandora_audio_checksum_configuration']['islandora_audio_checksum_type'] = array(
+    '#type' => 'fieldset',
+    '#type' => 'select',
+    '#title' => t('Checksum type'),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="islandora_audio_enable_checksum"]' => array('checked' => TRUE),
+      ),
+    ),
+    '#default_value' => variable_get('islandora_audio_checksum_type', 'DISABLED'),
+    '#multiple' => FALSE,
+    '#options' => array(
+      'MD5' => t('MD5'),
+      'SHA-1' => t('SHA-1'),
+      'SHA-256' => t('SHA-256'),
+      'SHA-385' => t('SHA-385'),
+      'SHA-512' => t('SHA-512'),
+    ),
+  );
   return system_settings_form($form);
 }
 
