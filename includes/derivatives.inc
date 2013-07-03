@@ -8,15 +8,15 @@
 /**
  * Creates all audio based the derivatives as datastreams for given object.
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object that will be used to generate/store the derivatives.
  *
  * @return bool
  *   TRUE if successful, FALSE otherwise.
  */
-function islandora_audio_create_all_derivatives(FedoraObject $object) {
+function islandora_audio_create_all_derivatives(AbstractObject $object) {
   if (!isset($object["OBJ"])) {
-    drupal_set_message(t("Could not create derivatives for %s.  No file was uploaded.", array("%s" => $object->id), "error"));
+    drupal_set_message(t("Could not create derivatives for %s. No file was uploaded.", array("%s" => $object->id), "error"));
     return FALSE;
   }
   $mime_detect = new MimeDetect();
@@ -58,7 +58,7 @@ function islandora_audio_create_mp3($file_uri) {
 /**
  * Adds the given file as a datastream to the given object.
  *
- * @param FedoraObject $object
+ * @param AbstractObject $object
  *   The object to add the datasteam to.
  * @param string $datastream_id
  *   The datastream id of the added datastream.
