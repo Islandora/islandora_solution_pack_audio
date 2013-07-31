@@ -16,7 +16,7 @@ class IslandoraAudioIngestTestCase extends IslandoraCollectionWebTestCase {
     return array(
       'name' => 'Audio Ingest/Purge',
       'description' => 'Ingests and purges an audio file from a randomly generated audio collection',
-      'group' => 'Islandora Solution Pack Audio',
+      'group' => 'Islandora Audio',
     );
   }
 
@@ -26,6 +26,7 @@ class IslandoraAudioIngestTestCase extends IslandoraCollectionWebTestCase {
    * @see IslandoraWebTestCase::setUp()
    */
   public function setUp() {
+    $this->lame_url = variable_get('islandora_lame_url');
     parent::setUp(array(
       'islandora',
       'islandora_audio',
@@ -41,8 +42,17 @@ class IslandoraAudioIngestTestCase extends IslandoraCollectionWebTestCase {
     $user = $this->drupalCreateUser(array(
       'view fedora repository objects',
       'ingest fedora objects',
+      'administer site configuration',
+      'manage object properties',
+      'delete fedora objects and datastreams',
+      'create child collection',
     ));
     $this->drupalLogin($user);
+
+    $edit = array(
+      'islandora_lame_url' => $this->lame_url,
+    );
+    $this->drupalPost('admin/islandora/audio', $edit, 'Save configuration');
 
     $label = $this->randomName(16);
     $suffix = $this->randomName(16);
@@ -53,8 +63,11 @@ class IslandoraAudioIngestTestCase extends IslandoraCollectionWebTestCase {
     $path = 'islandora/object/' . $collectionpid . '/manage/overview/ingest';
     $edit = array();
     $file = drupal_get_path('module', 'islandora_audio') . '/tests/fixtures/test.wav';
+    $handle = fopen($file, "r");
+    $contents = fread($handle, filesize($file));
+    fclose($handle);
     $edit['files[file]'] = $file;
-    $this->drupalPost($path, $edit, t('Ingest'));
+    $this->drupalPost($path, $edit, 'Ingest');
     $this->assertText('New Object', 'Audio object was created', 'Islandora');
 
     // Determines whether or not the appropriate datastreams were created.
@@ -67,6 +80,83 @@ class IslandoraAudioIngestTestCase extends IslandoraCollectionWebTestCase {
       'PROXY_MP3',
     );
     $this->assertDatastreams($object, $datastreams);
+
+    // Determines whether or not the WAV object is valid.
+    if (isset($object['OBJ'])) {
+      $wav = bin2hex($object['OBJ']->content);
+      $this->assertTrue($contents === $object['OBJ']->content, 'OBJ datastream matches originally-ingested content', 'Islandora');
+      $wav_subchunk2size = $this->convertHexToInt(substr($wav, 80, 8));
+      $wav_samplerate = $this->convertHexToInt(substr($wav, 48, 8));
+      $wav_numchannels = $this->convertHexToInt(substr($wav, 44, 4));
+      $wav_bytespersample = $this->convertHexToInt(substr($wav, 68, 4)) / 8;
+      $wav_numsamples = strlen(substr($wav, 88)) / $wav_numchannels / $wav_bytespersample / 2;
+
+      // Runs some corruption checks on the WAV header.
+      $magic_number = str_split(substr($wav, 0, 24), 8);
+      if ($magic_number[0] = '52494646' && $magic_number[2] = '57415645') {
+        $this->pass("Header of the OBJ datastream contains correct file signature", 'Islandora');
+      }
+      else {
+        $this->fail("Header of the OBJ datastream contains corrupt file signature", 'Islandora');
+      }
+      $this->assertIdentical($this->convertHexToInt(substr($wav, 8, 8)), 36 + $wav_subchunk2size, 'OBJ datastream chunksize in binary header is correct', 'Islandora');
+      $this->assertTrue(substr($wav, 24, 8) === '666d7420', 'OBJ datastream fmt subchunk exists', 'Islandora');
+      $this->assertIdentical($this->convertHexToInt(substr($wav, 56, 8)), $wav_samplerate * $wav_numchannels * $wav_bytespersample, 'OBJ datastream byterate in binary header is correct', 'Islandora');
+      $this->assertIdentical($this->convertHexToInt(substr($wav, 64, 4)), $wav_numchannels * $wav_bytespersample, 'OBJ datastream block alignment set correctly', 'Islandora');
+      $this->assertTrue(substr($wav, 72, 8) === '64617461', 'OBJ datastream data subchunk exists', 'Islandora');
+      $this->assertIdentical($wav_subchunk2size, $wav_numsamples * $wav_numchannels * $wav_bytespersample, 'OBJ datastream data chunk is correct size', 'Islandora');
+    }
+
+    // And now, the MP3.
+    if (isset($object['PROXY_MP3'])) {
+      $mp3 = bin2hex($object['PROXY_MP3']->content);
+      $mp3_size = strlen($mp3) / 2;
+
+      // Look to see if VBR was set properly by LAME.
+      if (strpos($mp3, '58696e67')) {
+        $this->pass('PROXY_MP3 datastream contains Xing header indicating successful VBR encoding', 'Islandora');
+        $mp3_vbrheader = substr($mp3, strpos($mp3, '58696e67'), 240);
+
+        // Check the field flags. VBR-formatted MP3 files contain a 32-bit
+        // integer (stored as $mp3_flag_value) that is a combination of four
+        // bits, each one indicating the on-off status of a VBR setting, via
+        // logical OR. Rather than disassembling this value into individual
+        // bits, we just do a bit of simple math here to each bit to determine
+        // if it's on or off so that we know whether to run a check on it and
+        // offset the other values.
+        $mp3_field_offset = array(0, 0, 0);
+        $mp3_flag_value = hexdec(substr($mp3_vbrheader, 8, 8));
+        if (($mp3_flag_value + 1) % 2 == 0) {
+          $mp3_field_offset[0] += 8;
+          $mp3_field_offset[1] += 8;
+          $mp3_field_offset[2] += 8;
+        }
+        if (($mp3_flag_value + 4) % 4 > 1) {
+          $mp3_field_bytes = hexdec(substr($mp3_vbrheader, $mp3_field_offset[0] + 16, 8));
+          $this->assertTrue($mp3_size == $mp3_field_bytes, "PROXY_MP3 datastream reported filesize of {$mp3_size} bytes matches size field value of {$mp3_field_bytes}", 'Islandora');
+          $mp3_field_offset[1] += 8;
+          $mp3_field_offset[2] += 8;
+        }
+        if (($mp3_flag_value + 8) % 8 > 3) {
+          $mp3_field_offset[2] += 200;
+        }
+        if ($mp3_flag_value > 7) {
+          $mp3_field_quality = hexdec(substr($mp3_vbrheader, $mp3_field_offset[2] + 16, 8));
+          $this->assertTrue($mp3_field_quality <= 100 && $mp3_field_quality >= 0, "PROXY_MP3 datastream reports valid VBR quality of {$mp3_field_quality} (expected: between 0-100)", 'Islandora');
+        }
+      }
+
+      // Otherwise, just forget everything and check the file signature.
+      elseif (strpos($mp3, '58696e67') == FALSE && substr($mp3, 0, 4) == 'fffa') {
+        $this->pass('PROXY_MP3 datastream is encoded as a valid MPEG-1 Layer 3 file with CRC protection', 'Islandora');
+      }
+      elseif (strpos($mp3, '58696e67') == FALSE && substr($mp3, 0, 4) == 'fffb') {
+        $this->pass('PROXY_MP3 datastream is encoded as a valid unprotected MPEG-1 Layer 3 file', 'Islandora');
+      }
+      else {
+        $this->fail('PROXY_MP3 datastream is corrupt and does not identify as a valid MP3', 'Islandora');
+      }
+    }
 
     // Attempts to delete the object and then collection.
     $this->deleteObject($object->id);
