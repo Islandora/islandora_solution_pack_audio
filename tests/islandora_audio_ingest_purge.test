@@ -63,9 +63,6 @@ class IslandoraAudioIngestTestCase extends IslandoraCollectionWebTestCase {
     $path = 'islandora/object/' . $collectionpid . '/manage/overview/ingest';
     $edit = array();
     $file = drupal_get_path('module', 'islandora_audio') . '/tests/fixtures/test.wav';
-    $handle = fopen($file, "r");
-    $contents = fread($handle, filesize($file));
-    fclose($handle);
     $edit['files[file]'] = $file;
     $this->drupalPost($path, $edit, 'Ingest');
     $this->assertText('New Object', 'Audio object was created', 'Islandora');
@@ -81,9 +78,18 @@ class IslandoraAudioIngestTestCase extends IslandoraCollectionWebTestCase {
     );
     $this->assertDatastreams($object, $datastreams);
 
-    // Determines whether or not the WAV object is valid.
+    // Determines whether or not the WAV object is valid. WAV files contain a
+    // rigidly detailed header that contains all sorts of fun information we
+    // can use to validate things against other things. So, we check rigorously
+    // that the header contains properly constructed data by looking to see
+    // if certain values are at their expected byte offset. We also compare
+    // declared chunk sizes against actual sizes. If any of these are off, WAV
+    // players will fail to function.
     if (isset($object['OBJ'])) {
       $wav = bin2hex($object['OBJ']->content);
+      $handle = fopen($file, "r");
+      $contents = fread($handle, filesize($file));
+      fclose($handle);
       $this->assertTrue($contents === $object['OBJ']->content, 'OBJ datastream matches originally-ingested content', 'Islandora');
       $wav_subchunk2size = $this->convertHexToInt(substr($wav, 80, 8));
       $wav_samplerate = $this->convertHexToInt(substr($wav, 48, 8));
@@ -91,7 +97,7 @@ class IslandoraAudioIngestTestCase extends IslandoraCollectionWebTestCase {
       $wav_bytespersample = $this->convertHexToInt(substr($wav, 68, 4)) / 8;
       $wav_numsamples = strlen(substr($wav, 88)) / $wav_numchannels / $wav_bytespersample / 2;
 
-      // Runs some corruption checks on the WAV header.
+      // Corruption checks for the WAV header.
       $magic_number = str_split(substr($wav, 0, 24), 8);
       if ($magic_number[0] = '52494646' && $magic_number[2] = '57415645') {
         $this->pass("Header of the OBJ datastream contains correct file signature", 'Islandora');
@@ -107,12 +113,16 @@ class IslandoraAudioIngestTestCase extends IslandoraCollectionWebTestCase {
       $this->assertIdentical($wav_subchunk2size, $wav_numsamples * $wav_numchannels * $wav_bytespersample, 'OBJ datastream data chunk is correct size', 'Islandora');
     }
 
-    // And now, the MP3.
+    // And now, the MP3. Our default setup tries to create an MP3 using VBR,
+    // but we do some extra checks in case someone turns that off. If the
+    // header contains the characters 'Xing', it is flagged as VBR, and we can
+    // do an in-depth check on each of the VBR settings. Otherwise, we look for
+    // the basic MP3 signature 'fffa' or 'fffb' at the start of the binary.
     if (isset($object['PROXY_MP3'])) {
       $mp3 = bin2hex($object['PROXY_MP3']->content);
       $mp3_size = strlen($mp3) / 2;
 
-      // Look to see if VBR was set properly by LAME.
+      // Looks to see if VBR was set properly by LAME. If so, MATH TIME!
       if (strpos($mp3, '58696e67')) {
         $this->pass('PROXY_MP3 datastream contains Xing header indicating successful VBR encoding', 'Islandora');
         $mp3_vbrheader = substr($mp3, strpos($mp3, '58696e67'), 240);
@@ -121,25 +131,33 @@ class IslandoraAudioIngestTestCase extends IslandoraCollectionWebTestCase {
         // integer (stored as $mp3_flag_value) that is a combination of four
         // bits, each one indicating the on-off status of a VBR setting, via
         // logical OR. Rather than disassembling this value into individual
-        // bits, we just do a bit of simple math here to each bit to determine
-        // if it's on or off so that we know whether to run a check on it and
-        // offset the other values.
+        // bits, we use the algorithm "if (binary_total+bit_value*2)/bit_value*2
+        // is greater than or equal to bit_value, that bit is turned on" to find
+        // the status of each bit, so we know whether to offset the rest.
         $mp3_field_offset = array(0, 0, 0);
         $mp3_flag_value = hexdec(substr($mp3_vbrheader, 8, 8));
+
+        // We can't use the first flag, but we still need to offset the rest.
         if (($mp3_flag_value + 1) % 2 == 0) {
           $mp3_field_offset[0] += 8;
           $mp3_field_offset[1] += 8;
           $mp3_field_offset[2] += 8;
         }
+
+        // The second flag leads us to filesize data, which we can verify.
         if (($mp3_flag_value + 4) % 4 > 1) {
           $mp3_field_bytes = hexdec(substr($mp3_vbrheader, $mp3_field_offset[0] + 16, 8));
           $this->assertTrue($mp3_size == $mp3_field_bytes, "PROXY_MP3 datastream reported filesize of {$mp3_size} bytes matches size field value of {$mp3_field_bytes}", 'Islandora');
           $mp3_field_offset[1] += 8;
           $mp3_field_offset[2] += 8;
         }
+
+        // We can't use the third flag for anything either.
         if (($mp3_flag_value + 8) % 8 > 3) {
           $mp3_field_offset[2] += 200;
         }
+
+        // The fourth flag leads us to VBR quality data, which we can validate.
         if ($mp3_flag_value > 7) {
           $mp3_field_quality = hexdec(substr($mp3_vbrheader, $mp3_field_offset[2] + 16, 8));
           $this->assertTrue($mp3_field_quality <= 100 && $mp3_field_quality >= 0, "PROXY_MP3 datastream reports valid VBR quality of {$mp3_field_quality} (expected: between 0-100)", 'Islandora');
@@ -157,6 +175,12 @@ class IslandoraAudioIngestTestCase extends IslandoraCollectionWebTestCase {
         $this->fail('PROXY_MP3 datastream is corrupt and does not identify as a valid MP3', 'Islandora');
       }
     }
+
+    // Validate the thumbnail, just for kicks (also sometimes it fails?).
+    $datastreams = array(
+      'TN',
+    );
+    $this->assertImageDatastreams($datastreams);
 
     // Attempts to delete the object and then collection.
     $this->deleteObject($object->id);
