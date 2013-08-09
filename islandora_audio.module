@@ -209,9 +209,6 @@ function islandora_audio_islandora_sp_audiocmodel_islandora_ingest_steps() {
 /**
  * Implements hook_CMODEL_PID_islandora_derivative().
  */
-/**
- * Implements hook_islandora_derivative().
- */
 function islandora_audio_islandora_sp_audiocmodel_islandora_derivative() {
   return array(
     array(
