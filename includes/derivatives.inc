@@ -6,33 +6,6 @@
  */
 
 /**
- * Creates all audio based the derivatives as datastreams for given object.
- *
- * @param AbstractObject $object
- *   The object that will be used to generate/store the derivatives.
- *
- * @return bool
- *   TRUE if successful, FALSE otherwise.
- */
-function islandora_audio_create_all_derivatives(AbstractObject $object) {
-  if (!isset($object["OBJ"])) {
-    drupal_set_message(t("Could not create derivatives for %s. No file was uploaded.", array("%s" => $object->id), "error"));
-    return FALSE;
-  }
-  $mime_detect = new MimeDetect();
-  $ext = $mime_detect->getExtension($object['OBJ']->mimeType);
-  $file_name = str_replace(":", "-", $object->id) . ".OBJ.{$ext}";
-  $file_uri = file_create_filename($file_name, 'temporary://');
-  $object['OBJ']->getContent($file_uri);
-  if (($mp3_uri = islandora_audio_create_mp3($file_uri)) !== FALSE) {
-    islandora_audio_add_datastream($object, 'PROXY_MP3', $mp3_uri);
-  }
-  file_unmanaged_delete($file_uri);
-  islandora_audio_add_datastream($object, 'TN', drupal_get_path('module', 'islandora_audio') . '/images/audio-TN.jpg');
-  return TRUE;
-}
-
-/**
  * Creates the PROXY_MP3 derivative from the given audio file.
  *
  * @param AbstractObject $object
