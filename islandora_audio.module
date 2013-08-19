@@ -82,15 +82,6 @@ function islandora_audio_islandora_sp_audioCModel_islandora_view_object($object,
 }
 
 /**
- * Implements hook_CMODEL_PID_islandora_object_ingested().
- */
-function islandora_audio_islandora_sp_audioCModel_islandora_object_ingested($object) {
-  module_load_include('inc', 'islandora_audio', 'includes/derivatives');
-  islandora_audio_create_all_derivatives($object);
-}
-
-
-/**
  * Implements hook_islandora_xml_form_builder_forms().
  */
 function islandora_audio_islandora_xml_form_builder_forms() {
@@ -185,7 +176,8 @@ function islandora_audio_preprocess_islandora_audio(array &$variables) {
   }
 
   module_load_include('inc', 'islandora', 'includes/solution_packs');
-  $viewer = islandora_get_viewer($audio_params, 'islandora_audio_viewers');
+  $viewer = islandora_get_viewer($audio_params, 'islandora_audio_viewers', $islandora_object);
+
   if ($viewer) {
     $variables['islandora_content'] = $viewer;
   }
@@ -210,6 +202,32 @@ function islandora_audio_islandora_sp_audiocmodel_islandora_ingest_steps() {
       'form_id' => 'islandora_audio_audio_upload_form',
       'module' => 'islandora_audio',
       'file' => 'includes/audio_upload.form.inc',
+    ),
+  );
+}
+
+/**
+ * Implements hook_CMODEL_PID_islandora_derivative().
+ */
+function islandora_audio_islandora_sp_audiocmodel_islandora_derivative() {
+  return array(
+    array(
+      'source_dsid' => 'OBJ',
+      'destination_dsid' => 'PROXY_MP3',
+      'weight' => '0',
+      'function' => array(
+        'islandora_audio_create_mp3',
+      ),
+      'file' => drupal_get_path('module', 'islandora_audio') . '/includes/derivatives.inc',
+    ),
+    array(
+      'source_dsid' => NULL,
+      'destination_dsid' => 'TN',
+      'weight' => 1,
+      'function' => array(
+        'islandora_audio_create_thumbnail',
+      ),
+      'file' => drupal_get_path('module', 'islandora_audio') . '/includes/derivatives.inc',
     ),
   );
 }
