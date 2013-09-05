@@ -14,14 +14,14 @@
     <form FORMAT_URI="http://www.loc.gov/mods/v3" MIME="text/xml"/>
   </dsTypeModel>
   <dsTypeModel ID="OBJ" optional="false">
-    <form MIME="audio/mp3"/>
+    <form MIME="audio/mpeg"/>
     <form MIME="audio/wav"/>
     <form MIME="audio/x-wav"/>
     <form MIME="audio/vnd.wave"/>
     <form MIME="audio/flac"/>
   </dsTypeModel>
   <dsTypeModel ID="PROXY_MP3" optional="false">
-    <form MIME="audio/mp3"/>
+    <form MIME="audio/mpeg"/>
   </dsTypeModel>
   <dsTypeModel ID="TN" optional="false">
     <form MIME="image/jpg"/>
