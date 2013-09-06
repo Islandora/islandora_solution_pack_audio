@@ -8,7 +8,7 @@
  */
 ?>
 
-<div class="islandora-audio-object islandora" vocab="http://schema.org" prefix="dcterms: http://purl.org/dc/terms/" typeof="http://schema.org/AudioObject">
+<div class="islandora-audio-object islandora" vocab="http://schema.org/" prefix="dcterms: http://purl.org/dc/terms/" typeof="AudioObject">
   <div class="islandora-audio-content-wrapper clearfix">
     <?php if (isset($islandora_content)): ?>
       <div class="islandora-audio-content">
