@@ -24,8 +24,13 @@
   clear: both;
 }
 
+/* This is kept for legacy reasons. */
 dl.islandora-audio-fields {
   width:100%;
+}
+
+dl.islandora-metadata-fields {
+    width:100%;
 }
 
 .islandora-audio-metadata dt {
