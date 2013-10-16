@@ -26,7 +26,7 @@ class IslandoraAudioIngestTestCase extends IslandoraCollectionWebTestCase {
    * @see IslandoraWebTestCase::setUp()
    */
   public function setUp() {
-    $this->lame_url = variable_get('islandora_lame_url');
+    $this->lame_url = variable_get('islandora_lame_url', '/usr/bin/lame');
     parent::setUp(array(
       'islandora',
       'islandora_audio',
