@@ -156,7 +156,7 @@ function islandora_audio_add_datastream(AbstractObject $object, $datastream_id, 
           'message_sub' => array(
             '@dsid' => $datastream_id,
             '@pid' => $object->id,
-            '@message' => $e->getMessage(),
+            '@message' => $e->getTraceAsString(),
           ),
           'type' => 'watchdog',
           'severity' => WATCHDOG_ERROR,
