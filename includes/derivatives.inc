@@ -148,20 +148,16 @@ function islandora_audio_add_datastream(AbstractObject $object, $datastream_id, 
     );
   }
   catch (exception $e) {
-    $variables = array(
-      '@ret' => $e->getTraceAsString(),
-      '@dsid' => $datastream_id
-    );
-    watchdog('islandora_image', 'Large Image failed to ingest data stream @dsid.<br/>Stack: @ret', $variables, WATCHDOG_ERROR);
     return array(
       'success' => FALSE,
       'messages' => array(
         array(
-          'message' => t('Large Image failed to add @dsid datastream for @pid. Error message: @message'),
+          'message' => t('Large Image failed to add @dsid datastream for @pid. Error message: @message<br/>Stack: @stack'),
           'message_sub' => array(
             '@dsid' => $datastream_id,
             '@pid' => $object->id,
             '@message' => $e->getmessage(),
+            '@stack' => $e->getTraceAsString(),
           ),
           'type' => 'watchdog',
           'severity' => WATCHDOG_ERROR,
