@@ -84,25 +84,11 @@ function islandora_audio_create_mp3(AbstractObject $object, $force = FALSE) {
  * @see hook_islandora_derivative()
  */
 function islandora_audio_create_thumbnail(AbstractObject $object, $force = FALSE) {
-  if (!isset($object['TN']) || (isset($object['TN']) && $force === TRUE)) {
-    if (!isset($object["OBJ"])) {
-      return array(
-        'success' => FALSE,
-        'messages' => array(
-          array(
-            'message' => t('No OBJ datastream present for object @pid - PROXY_MP3 creation was skipped.'),
-            'message_sub' => array('@pid' => $object->id),
-            'type' => 'watchdog',
-            'severity' => WATCHDOG_ERROR,
-          ),
-        ),
-      );
-    }
-    else {
-      return islandora_audio_add_datastream($object, 'TN', drupal_get_path('module', 'islandora_audio') . '/images/audio-TN.jpg');
-    }
+  if (!isset($object['TN']) || $force === TRUE) {
+    return islandora_audio_add_datastream($object, 'TN', drupal_get_path('module', 'islandora_audio') . '/images/audio-TN.jpg');
   }
 }
+
 /**
  * Adds the given file as a datastream to the given object.
  *
@@ -152,11 +138,12 @@ function islandora_audio_add_datastream(AbstractObject $object, $datastream_id, 
       'success' => FALSE,
       'messages' => array(
         array(
-          'message' => t('Failed to add @dsid datastream for @pid. Error message: @message'),
+          'message' => t('Audio solution pack failed to add @dsid datastream for @pid. Error message: @message<br/>Stack: @stack'),
           'message_sub' => array(
             '@dsid' => $datastream_id,
             '@pid' => $object->id,
-            '@message' => $e->getMessage(),
+            '@message' => $e->getmessage(),
+            '@stack' => $e->getTraceAsString(),
           ),
           'type' => 'watchdog',
           'severity' => WATCHDOG_ERROR,

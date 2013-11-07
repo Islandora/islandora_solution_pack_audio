@@ -18,26 +18,72 @@
  */
 function islandora_audio_audio_upload_form(array $form, array &$form_state) {
   $upload_size = min((int) ini_get('post_max_size'), (int) ini_get('upload_max_filesize'));
-  $extensions = array('wav mp3');
+  $audio_extensions = array('wav mp3');
+  $thumbnail_extensions = array('gif jpg png jpeg');
+
   return array(
-    'file' => array(
+    'audio_file' => array(
       '#title' => t('Audio File'),
       '#type' => 'managed_file',
       '#required' => TRUE,
-      '#description' => t('Select a file to upload.<br/>Files must be less than <b>@size MB.</b><br/>Allowed file types: <b>@ext.</b>', array('@size' => $upload_size, '@ext' => $extensions[0])),
-      '#default_value' => isset($form_state['values']['file']) ? $form_state['values']['file'] : NULL,
+      '#description' => t('Select a file to upload.<br/>Files must be less than <b>@size MB.</b><br/>Allowed file types: <b>@ext.</b>', array('@size' => $upload_size, '@ext' => $audio_extensions[0])),
+      '#default_value' => isset($form_state['values']['audio_file']) ? $form_state['values']['audio_file'] : NULL,
       '#upload_location' => 'temporary://',
       '#upload_validators' => array(
-        'file_validate_extensions' => $extensions,
+        'file_validate_extensions' => $audio_extensions,
          // Assume its specified in MB.
         'file_validate_size' => array($upload_size * 1024 * 1024),
+      ),
+    ),
+    'supply_thumbnail' => array(
+      '#type' => 'checkbox',
+      '#title' => t('Upload Thumbnail'),
+    ),
+    'thumbnail_section' => array(
+      'thumbnail_file' => array(
+        '#title' => t('Thumbnail File'),
+        '#type' => 'managed_file',
+        '#description' => t('Select a file to upload.<br/>Files must be less than <b>@size MB.</b><br/>Allowed file types: <b>@ext.</b>', array('@size' => $upload_size, '@ext' => $thumbnail_extensions[0])),
+        '#default_value' => isset($form_state['values']['thumbnail_file']) ? $form_state['values']['thumbnail_file'] : NULL,
+        '#upload_location' => 'temporary://',
+        '#upload_validators' => array(
+          'file_validate_extensions' => $thumbnail_extensions,
+           // Assume its specified in MB.
+          'file_validate_size' => array($upload_size * 1024 * 1024),
+        ),
+      ),
+      'scale_thumbnail' => array(
+        '#type' => 'checkbox',
+        '#title' => t('Scale Thumbnail'),
+        '#attributes' => array('checked' => 'checked'),
+      ),
+      '#type' => 'item',
+      '#states' => array(
+        'visible' => array('#edit-supply-thumbnail' => array('checked' => TRUE)),
       ),
     ),
   );
 }
 
 /**
- * Addes the uploaded file into the ingestable objects 'OBJ' datastream.
+ * Validation for audio upload form.
+ *
+ * @param array $form
+ *   The Drupal form.
+ * @param array $form_state
+ *   The Drupal form state.
+ */
+function islandora_audio_audio_upload_form_validate(array $form, array &$form_state) {
+  if ($form_state['values']['supply_thumbnail'] &&
+    !$form_state['values']['thumbnail_file']) {
+    form_set_error('thumbnail_file', t('If you select "Upload Thumbnail" please supply a file.'));
+  }
+}
+
+/**
+ * Adds the uploaded file into the ingestable objects 'OBJ' datastream.
+ *
+ * May also populate the TN datatstream.
  *
  * @param array $form
  *   The Drupal form.
@@ -45,17 +91,44 @@ function islandora_audio_audio_upload_form(array $form, array &$form_state) {
  *   The Drupal form state.
  */
 function islandora_audio_audio_upload_form_submit(array $form, array &$form_state) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
   $object = $form_state['islandora']['objects'][0];
+
   if (empty($object['OBJ'])) {
-    $ds = $object->constructDatastream('OBJ', 'M');
-    $object->ingestDatastream($ds);
+    $obj = $object->constructDatastream('OBJ', 'M');
+    $object->ingestDatastream($obj);
   }
   else {
-    $ds = $object['OBJ'];
+    $obj = $object['OBJ'];
   }
-  $file = file_load($form_state['values']['file']);
-  $path = drupal_realpath($file->uri);
-  $ds->setContentFromFile($path, FALSE);
-  $ds->label = $file->filename;
-  $ds->mimetype = $file->filemime;
+  $audio_file = file_load($form_state['values']['audio_file']);
+  $obj->setContentFromFile(drupal_realpath($audio_file->uri), FALSE);
+  if ($obj->label != $audio_file->filename) {
+    $obj->label = $audio_file->filename;
+  }
+  if ($obj->mimetype != $audio_file->filemime) {
+    $obj->mimetype = $audio_file->filemime;
+  }
+
+  if ($form_state['values']['supply_thumbnail']) {
+    $thumbnail_file = file_load($form_state['values']['thumbnail_file']);
+    if ($form_state['values']['scale_thumbnail']) {
+      islandora_scale_thumbnail($thumbnail_file, 200, 200);
+    }
+
+    if (empty($object['TN'])) {
+      $tn = $object->constructDatastream('TN', 'M');
+      $object->ingestDatastream($tn);
+    }
+    else {
+      $tn = $object['TN'];
+    }
+    $tn->setContentFromFile(drupal_realpath($thumbnail_file->uri), FALSE);
+    if ($tn->label != $thumbnail_file->filename) {
+      $tn->label = $thumbnail_file->filename;
+    }
+    if ($tn->mimetype != $thumbnail_file->filemime) {
+      $tn->mimetype = $thumbnail_file->filemime;
+    }
+  }
 }

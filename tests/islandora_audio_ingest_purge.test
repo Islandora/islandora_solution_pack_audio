@@ -56,7 +56,7 @@ class IslandoraAudioIngestTestCase extends IslandoraCollectionWebTestCase {
     $path = 'islandora/object/' . $collectionpid . '/manage/overview/ingest';
     $edit = array();
     $file = drupal_get_path('module', 'islandora_audio') . '/tests/fixtures/test.wav';
-    $edit['files[file]'] = $file;
+    $edit['files[audio_file]'] = $file;
     $this->drupalPost($path, $edit, 'Ingest');
     $this->assertText('New Object', 'Audio object was created', 'Islandora');
 
