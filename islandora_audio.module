@@ -173,7 +173,7 @@ function islandora_audio_preprocess_islandora_audio(array &$variables) {
 
   // Audio player.
   if (isset($islandora_object['PROXY_MP3']) && islandora_datastream_access(ISLANDORA_VIEW_OBJECTS, $islandora_object['PROXY_MP3'])) {
-    $audio_url = url("islandora/object/{$islandora_object->id}/datastream/PROXY_MP3/view", array('absolute' => TRUE));
+    $audio_url = url("islandora/object/{$islandora_object->id}/datastream/PROXY_MP3", array('absolute' => TRUE));
 
     $audio_params += array(
       "url" => $audio_url,
