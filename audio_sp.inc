@@ -15,7 +15,7 @@ class Exiftool {
 
   /**
    * Constructor
-   * @param type $pid 
+   * @param type $pid
    */
   function __construct($pid = NULL) {
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
@@ -26,12 +26,12 @@ class Exiftool {
   }
 
   /**
-   * Extract Metadata
+   * Extract technical metadata
    * @param type $parameterArray
    * @param type $dsid
    * @param type $file
    * @param type $file_ext
-   * @return type 
+   * @return type
    */
   function extractMetadata($parameterArray, $dsid, $file, $file_ext) {
     $file_suffix = '_' . $dsid . '.xml';
@@ -44,8 +44,8 @@ class Exiftool {
   }
 
   /**
-   * Display Metadata
-   * @return type 
+   * Display technical metadata
+   * @return type
    */
   function displayMetadata() {
     $output = '';
@@ -102,19 +102,19 @@ class AudioManipulation {
    * @param type file
    * @param type $file
    * @param type $file_ext
-   * @return type 
+   * @return type
    */
-  function createMP3($parameterArray = NULL, $dsid, $file, $file_ext) {
+  function createMP3($parameterArray = NULL,  $dsid, $file, $file_ext) {
     $file_suffix = "_$dsid.$file_ext";
     $return_value = TRUE;
 
     $output = array();
-    $command_string = "lame -V5 --vbr-new '${file}' '${file}.mp3'";
+    $command_string = (variable_get('islandora_audio_lame_path', '/usr/bin/lame') . ' --preset ' . variable_get('islandora_audio_lame_preset', 'standard') . ' ' . $file . ' ' . $file .'_PROXY.mp3');
 
     exec($command_string, $output, $returnValue);
 
     if ($returnValue == '0') {
-      $_SESSION['fedora_ingest_files']["PROXY_MP3"] = $file . '.mp3';
+      $_SESSION['fedora_ingest_files']["PROXY_MP3"] = $file . '_PROXY.mp3';
       $stored_thumbnail = drupal_get_path('module', 'islandora_audio_sp') . '/images/audio-TN.jpg';
       file_copy($stored_thumbnail, file_directory_path());
       $thumbnail = file_directory_path() . '/' . 'audio-TN.jpg';
@@ -125,7 +125,6 @@ class AudioManipulation {
       ObjectHelper::warnIfMisconfigured('LAME'); /// need to add this to ObjectHelper
     }
   }
-
 }
 
 /**
@@ -137,7 +136,7 @@ class SWFAudioPlayer {
 
   /**
    * Constructor
-   * @param type $pid 
+   * @param type $pid
    */
   function __construct($pid) {
     module_load_include('inc', 'fedora_repository', 'api/fedora_item');
@@ -150,7 +149,7 @@ class SWFAudioPlayer {
   /**
    * Show MP3
    * @global type $base_url
-   * @return type 
+   * @return type
    */
   function showMP3() {
 

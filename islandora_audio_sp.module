@@ -1,12 +1,33 @@
 <?php
 
+function islandora_audio_sp_menu() {
+  $items['admin/settings/islandora_audio_sp'] = array(
+    'title' => 'Islandora Audio Solution Pack Admin',
+    'description' => 'Configure Islandora Audio Module',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('islandora_audio_admin_settings'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'islandora_audio.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  $items['islandora/audio/lame'] = array(
+    'page callback' => 'update_lame_div',
+    'access arguments' => array('view fedora collection'),
+    'file' => 'islandora_audio.admin.inc',
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
 /**
  * Islandora audio solution pack module
  */
 
 /**
  * Implements hook_fedora_repository_required_fedora_objects
- * @return array 
+ * @return array
  */
 function islandora_audio_sp_fedora_repository_required_fedora_objects() {
   module_load_include('inc', 'fedora_repository', 'fedora_repository.solutionpacks');
@@ -49,5 +70,31 @@ function islandora_audio_sp_fedora_repository_required_fedora_objects() {
       ),
     ),
   );
+}
+
+function islandora_audio_sp_form_fedora_repository_ingest_form_alter(&$form, &$form_state) {
+  if ($form['content_model_pid']['#value'] == 'islandora:sp_videoCModel') {
+    $form['upload'] = array(
+      'upload' => array(
+        '#weight' => -99,
+        '#type' => 'yui_uploader',
+        '#required' => TRUE, // If FALSE the user can submit the form without uploading any files, if true at least one file must be uploaded.
+        '#width' => '100px', // The width of the upload button.
+        '#height' => '40px', // The height of the rendered button
+        '#extensions' => array('wav', 'flac', 'mp3'), // Limit uploads to matching file extensions. Examples array('jpg', 'xml')
+        '#multiple_files' => FALSE, // Allow multiple files to selected at once
+      ),
+    );
+    array_unshift($form['#validate'], 'manage_yui_uploads');
+    if (!variable_get('audio_retain_original', TRUE)) {
+      $form['#validate'][] = 'audio_remove_original';
+
+    }
+    $form['submit']['#value'] = t("Create Audio Object");
+  }
+}
+
+function audio_remove_original($form, &$form_state) {
+  $form_state['values']['ingest-file-location'] = NULL;
 }
 
