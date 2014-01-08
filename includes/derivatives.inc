@@ -45,6 +45,13 @@ function islandora_audio_create_mp3(AbstractObject $object, $force = FALSE) {
       $outfile = $file . '.mp3';
       $lame_url = variable_get('islandora_lame_url', '/usr/bin/lame');
       $command = "$lame_url -V5 --vbr-new '${file}' '${outfile}'";
+
+      // Determine if the server is running Windows.
+      if (islandora_os_check() == "Windows") {
+        // Remove the single-quotes around file names. Otherwise, LAME will fail.
+        $command = "$lame_url -V5 --vbr-new ${file} ${outfile}";
+      }
+
       $ret = FALSE;
       exec($command, $output, $ret);
       // Successfully crafted the derivative.
