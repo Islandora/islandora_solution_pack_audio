@@ -49,7 +49,8 @@ function islandora_audio_create_mp3(AbstractObject $object, $force = FALSE) {
 
       // Determine if the server's operating system is Windows.
       if (islandora_deployed_on_windows()) {
-        // Remove single-quotes around file names. Otherwise, LAME will fail.
+        // Remove single-quotes around file names.
+        // Otherwise, LAME will fail under Windows.
         $command = "$lame_url -V5 --vbr-new ${file} ${outfile}";
       }
 
