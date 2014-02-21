@@ -20,7 +20,6 @@
  * @see hook_islandora_derivative()
  */
 function islandora_audio_create_mp3(AbstractObject $object, $force = FALSE) {
-  module_load_include('inc', 'islandora', 'includes/utilities');
   if (!isset($object['PROXY_MP3']) || (isset($object['PROXY_MP3']) && $force === TRUE)) {
     if (!isset($object["OBJ"])) {
       return array(
@@ -45,15 +44,7 @@ function islandora_audio_create_mp3(AbstractObject $object, $force = FALSE) {
       $file = drupal_realpath($file_uri);
       $outfile = $file . '.mp3';
       $lame_url = variable_get('islandora_lame_url', '/usr/bin/lame');
-      $command = "$lame_url -V5 --vbr-new '${file}' '${outfile}'";
-
-      // Determine if the server's operating system is Windows.
-      if (islandora_deployed_on_windows()) {
-        // Remove single-quotes around file names.
-        // Otherwise, LAME will fail under Windows.
-        $command = "$lame_url -V5 --vbr-new ${file} ${outfile}";
-      }
-
+      $command = "$lame_url -V5 --vbr-new \"${file}\" \"${outfile}\"";
       $ret = FALSE;
       exec($command, $output, $ret);
       // Successfully crafted the derivative.
