@@ -44,7 +44,7 @@ function islandora_audio_create_mp3(AbstractObject $object, $force = FALSE) {
       $file = drupal_realpath($file_uri);
       $outfile = $file . '.mp3';
       $lame_url = variable_get('islandora_lame_url', '/usr/bin/lame');
-      $command = "$lame_url -V5 --vbr-new '${file}' '${outfile}'";
+      $command = "$lame_url -V5 --vbr-new \"$file\" \"$outfile\"";
       $ret = FALSE;
       exec($command, $output, $ret);
       // Successfully crafted the derivative.
