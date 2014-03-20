@@ -1,49 +1,43 @@
-BUILD STATUS
-------------
-Current build status:
-[![Build Status](https://travis-ci.org/Islandora/islandora_solution_pack_audio.png?branch=7.x)](https://travis-ci.org/Islandora/islandora_solution_pack_audio)
+# Audio Solution Pack [![Build Status](https://travis-ci.org/Islandora/islandora_solution_pack_audio.png?branch=7.x)](https://travis-ci.org/Islandora/islandora_solution_pack_audio)
 
-CI Server:
-http://jenkins.discoverygarden.ca
+## Introduction
 
-SUMMARY
--------
+Adds all required Fedora objects to allow users to ingest and retrieve audio files through the Islandora interface
 
-Audio Solution Pack
+## Requirements
 
-Adds all required Fedora objects to allow users to ingest and retrieve audio
-files through the Islandora interface
+This module requires the following modules/libraries:
 
-REQUIREMENTS
-------------
+* [Islandora](https://github.com/islandora/islandora)
+* [Tuque](https://github.com/islandora/tuque)
+* [Lame](http://lame.sourceforge.net) (Debian/Ubuntu `sudo apt-get install lame`)
 
-Lame - http://lame.sourceforge.net
+## Installation
 
-INSTALLATION
-------------
+Install as usual, see [this](https://drupal.org/documentation/install/modules-themes/modules-7) for further information.
 
-Ubuntu:
- * sudo apt-get install lame
+## Configuration
 
-CONFIGURATION
--------------
+Set the path for `lame` and select a viewer in Administration » Islandora » Audio Collection (admin/islandora/audio).
 
+![Configuration](http://i.imgur.com/jx73lEK.png)
 
-CUSTOMIZATION
--------------
+## Troubleshooting/Issues
 
+Having problems or solved a problem? Check out the Islandora google groups for a solution.
 
-TROUBLESHOOTING
----------------
+* [Islandora Group](https://groups.google.com/forum/?hl=en&fromgroups#!forum/islandora)
+* [Islandora Dev Group](https://groups.google.com/forum/?hl=en&fromgroups#!forum/islandora-dev)
 
+## Maintainers/Sponsors
+Current maintainers:
 
-F.A.Q.
-------
+* [Nick Ruest](https://github.com/ruebot)
 
+## Development
 
-CONTACT
--------
+If you would like to contribute to this module, please check out our helpful [Documentation for Developers](https://github.com/Islandora/islandora/wiki#wiki-documentation-for-developers) info, as well as our [Developers](http://islandora.ca/developers) section on the Islandora.ca site.
 
+## License
 
-SPONSORS
---------
+[GPLv3](http://www.gnu.org/licenses/gpl-3.0.txt)
