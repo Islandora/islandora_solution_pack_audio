@@ -65,6 +65,10 @@ function islandora_audio_create_mp3(AbstractObject $object, $force = FALSE) {
           ),
         );
       }
+      if ($file) {
+        // Delete the file from the temp directory.
+        file_delete($file);
+      }
     }
   }
 }
