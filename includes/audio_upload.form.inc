@@ -130,12 +130,5 @@ function islandora_audio_audio_upload_form_submit(array $form, array &$form_stat
     if ($tn->mimetype != $thumbnail_file->filemime) {
       $tn->mimetype = $thumbnail_file->filemime;
     }
-    if ($thumbnail_file) {
-      file_delete($thumbnail_file);
-    }
-  }
-  if ($audio_file) {
-    $temp_file_path = drupal_realpath($audio_file->uri);
-    file_unmanaged_delete($temp_file_path);
   }
 }
