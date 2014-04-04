@@ -49,6 +49,8 @@ function islandora_audio_create_mp3(AbstractObject $object, $force = FALSE) {
       exec($command, $output, $ret);
       // Successfully crafted the derivative.
       if ($ret == '0') {
+        // Delete 'file' from the temp directory.
+        file_unmanaged_delete($file);
         return islandora_audio_add_datastream($object, 'PROXY_MP3', $outfile);
       }
       // Failure.
@@ -64,10 +66,6 @@ function islandora_audio_create_mp3(AbstractObject $object, $force = FALSE) {
             ),
           ),
         );
-      }
-      if ($file) {
-        // Delete the file from the temp directory.
-        file_delete($file);
       }
     }
   }
@@ -120,10 +118,10 @@ function islandora_audio_add_datastream(AbstractObject $object, $datastream_id, 
     }
     $ds->mimetype = $mime_detector->getMimetype($file_uri);
     $ds->setContentFromFile(drupal_realpath($file_uri));
-    file_unmanaged_delete($file_uri);
     if ($ingest) {
       $object->ingestDatastream($ds);
     }
+    file_unmanaged_delete($file_uri);
     return array(
       'success' => TRUE,
       'messages' => array(
