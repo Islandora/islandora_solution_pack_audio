@@ -49,8 +49,6 @@ function islandora_audio_create_mp3(AbstractObject $object, $force = FALSE) {
       exec($command, $output, $ret);
       // Successfully crafted the derivative.
       if ($ret == '0') {
-        // Delete 'file' from the temp directory.
-        file_unmanaged_delete($file);
         return islandora_audio_add_datastream($object, 'PROXY_MP3', $outfile);
       }
       // Failure.
@@ -105,6 +103,7 @@ function islandora_audio_create_thumbnail(AbstractObject $object, $force = FALSE
  *   An array describing the outcome of the datastream addition.
  */
 function islandora_audio_add_datastream(AbstractObject $object, $datastream_id, $file_uri) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
   try {
     $ingest = !isset($object[$datastream_id]);
     $mime_detector = new MimeDetect();
@@ -121,7 +120,11 @@ function islandora_audio_add_datastream(AbstractObject $object, $datastream_id, 
     if ($ingest) {
       $object->ingestDatastream($ds);
     }
-    file_unmanaged_delete($file_uri);
+    module_load_include('inc', 'islandora', 'includes/utilities');
+    // Manage the temp file.
+    $file_name = str_replace(':', '-', $object->id);
+    islandora_temp_file_entry($file_name, $file_uri);
+
     return array(
       'success' => TRUE,
       'messages' => array(
