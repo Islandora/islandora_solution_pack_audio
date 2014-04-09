@@ -121,7 +121,7 @@ function islandora_audio_add_datastream(AbstractObject $object, $datastream_id, 
       $object->ingestDatastream($ds);
     }
     // Manage the temp file.
-    $file_name = drupal_realname($file_uri);
+    $file_name = drupal_basename($file_uri);
     islandora_temp_file_entry($file_name, $file_uri);
 
     return array(
