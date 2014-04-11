@@ -49,6 +49,8 @@ function islandora_audio_create_mp3(AbstractObject $object, $force = FALSE) {
       exec($command, $output, $ret);
       // Successfully crafted the derivative.
       if ($ret == '0') {
+        $file_name = drupal_basename($file_uri);
+        islandora_temp_file_entry($file_name, $file_uri);
         return islandora_audio_add_datastream($object, 'PROXY_MP3', $outfile);
       }
       // Failure.
