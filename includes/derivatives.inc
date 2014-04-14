@@ -39,20 +39,23 @@ function islandora_audio_create_mp3(AbstractObject $object, $force = FALSE) {
       $ext = $mime_detect->getExtension($object['OBJ']->mimeType);
       $file_name = str_replace(":", "-", $object->id) . ".OBJ.{$ext}";
       $file_uri = file_create_filename($file_name, 'temporary://');
+
       $object['OBJ']->getContent($file_uri);
       $output = array();
       $file = drupal_realpath($file_uri);
       $outfile = $file . '.mp3';
+      islandora_temp_file_entry($file_name, $outfile);
       $lame_url = variable_get('islandora_lame_url', '/usr/bin/lame');
       $command = "$lame_url -V5 --vbr-new \"$file\" \"$outfile\"";
       $ret = FALSE;
       exec($command, $output, $ret);
       // Successfully crafted the derivative.
       if ($ret == '0') {
-        return islandora_audio_add_datastream($object, 'PROXY_MP3', $outfile);
+        return islandora_audio_add_datastream($object, 'PROXY_MP3', $file_uri);
       }
       // Failure.
       else {
+        islandora_temp_file_delete($file_uri);
         return array(
           'success' => FALSE,
           'messages' => array(
