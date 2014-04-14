@@ -20,6 +20,7 @@
  * @see hook_islandora_derivative()
  */
 function islandora_audio_create_mp3(AbstractObject $object, $force = FALSE) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
   if (!isset($object['PROXY_MP3']) || (isset($object['PROXY_MP3']) && $force === TRUE)) {
     if (!isset($object["OBJ"])) {
       return array(
@@ -40,11 +41,14 @@ function islandora_audio_create_mp3(AbstractObject $object, $force = FALSE) {
       $file_name = str_replace(":", "-", $object->id) . ".OBJ.{$ext}";
       $file_uri = file_create_filename($file_name, 'temporary://');
 
+      $file_name = drupal_basename($file_uri);
+      islandora_temp_file_entry($file_name, $file_uri);
+
       $object['OBJ']->getContent($file_uri);
       $output = array();
       $file = drupal_realpath($file_uri);
       $outfile = $file . '.mp3';
-      islandora_temp_file_entry($file_name, $outfile);
+
       $lame_url = variable_get('islandora_lame_url', '/usr/bin/lame');
       $command = "$lame_url -V5 --vbr-new \"$file\" \"$outfile\"";
       $ret = FALSE;
