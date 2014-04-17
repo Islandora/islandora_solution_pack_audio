@@ -45,7 +45,7 @@ class IslandoraAudioIngestTestCase extends IslandoraCollectionWebTestCase {
     $edit = array(
       'islandora_lame_url' => $this->lame_url,
     );
-    $this->drupalPost('admin/islandora/audio', $edit, 'Save configuration');
+    $this->drupalPost('admin/islandora/solution_pack_config/audio', $edit, 'Save configuration');
 
     $label = $this->randomName(16);
     $suffix = $this->randomName(16);
