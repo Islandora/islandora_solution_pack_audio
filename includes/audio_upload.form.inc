@@ -102,6 +102,7 @@ function islandora_audio_audio_upload_form_submit(array $form, array &$form_stat
     $obj = $object['OBJ'];
   }
   $audio_file = file_load($form_state['values']['audio_file']);
+
   $obj->setContentFromFile(drupal_realpath($audio_file->uri), FALSE);
   if ($obj->label != $audio_file->filename) {
     $obj->label = $audio_file->filename;

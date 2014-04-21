@@ -41,8 +41,8 @@ function islandora_audio_create_mp3(AbstractObject $object, $force = FALSE) {
       $file_name = str_replace(":", "-", $object->id) . ".OBJ.{$ext}";
       $file_uri = file_create_filename($file_name, 'temporary://');
 
-      $file_name = drupal_basename($file_uri);
-      islandora_temp_file_entry($file_name, $file_uri);
+      // Temp file management
+      islandora_temp_file_entry($file_uri);
 
       $object['OBJ']->getContent($file_uri);
       $output = array();
@@ -55,10 +55,14 @@ function islandora_audio_create_mp3(AbstractObject $object, $force = FALSE) {
       exec($command, $output, $ret);
       // Successfully crafted the derivative.
       if ($ret == '0') {
-        return islandora_audio_add_datastream($object, 'PROXY_MP3', $file_uri);
+        $result = islandora_audio_add_datastream($object, 'PROXY_MP3', $file_uri);
+        // Delete the temp file.
+        islandora_temp_file_delete($file_uri);
+        return $result;
       }
       // Failure.
       else {
+        // Clean up temp file on failure.
         islandora_temp_file_delete($file_uri);
         return array(
           'success' => FALSE,
@@ -112,10 +116,6 @@ function islandora_audio_create_thumbnail(AbstractObject $object, $force = FALSE
 function islandora_audio_add_datastream(AbstractObject $object, $datastream_id, $file_uri) {
   module_load_include('inc', 'islandora', 'includes/utilities');
   try {
-    // Manage the temp file.
-    $file_name = drupal_basename($file_uri);
-    islandora_temp_file_entry($file_name, $file_uri);
-
     $ingest = !isset($object[$datastream_id]);
     $mime_detector = new MimeDetect();
 
@@ -131,9 +131,6 @@ function islandora_audio_add_datastream(AbstractObject $object, $datastream_id, 
     if ($ingest) {
       $object->ingestDatastream($ds);
     }
-
-    // Remove the temp file now that we are done.
-    islandora_temp_file_delete($file_uri);
 
     return array(
       'success' => TRUE,
