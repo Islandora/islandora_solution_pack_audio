@@ -41,8 +41,6 @@ function islandora_audio_create_mp3(AbstractObject $object, $force = FALSE) {
       $file_name = str_replace(":", "-", $object->id) . ".OBJ.{$ext}";
       $file_uri = file_create_filename($file_name, 'temporary://');
 
-      // Temp file management
-      islandora_temp_file_entry($file_uri);
 
       $object['OBJ']->getContent($file_uri);
       $output = array();
@@ -53,17 +51,19 @@ function islandora_audio_create_mp3(AbstractObject $object, $force = FALSE) {
       $command = "$lame_url -V5 --vbr-new \"$file\" \"$outfile\"";
       $ret = FALSE;
       exec($command, $output, $ret);
+      // Temp file management
+      $managed_temp_file = islandora_temp_file_entry($file_uri);
       // Successfully crafted the derivative.
       if ($ret == '0') {
         $result = islandora_audio_add_datastream($object, 'PROXY_MP3', $file_uri);
         // Delete the temp file.
-        islandora_temp_file_delete($file_uri);
+        file_delete($managed_temp_file);
         return $result;
       }
       // Failure.
       else {
         // Clean up temp file on failure.
-        islandora_temp_file_delete($file_uri);
+        file_delete($managed_temp_file);
         return array(
           'success' => FALSE,
           'messages' => array(
