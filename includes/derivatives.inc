@@ -114,7 +114,6 @@ function islandora_audio_create_thumbnail(AbstractObject $object, $force = FALSE
  *   An array describing the outcome of the datastream addition.
  */
 function islandora_audio_add_datastream(AbstractObject $object, $datastream_id, $file_uri) {
-  module_load_include('inc', 'islandora', 'includes/utilities');
   try {
     $ingest = !isset($object[$datastream_id]);
     $mime_detector = new MimeDetect();
