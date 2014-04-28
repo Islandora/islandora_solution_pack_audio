@@ -251,11 +251,11 @@
         <properties>
           <type>select</type>
           <access>TRUE</access>
-          <default_value>Sound Recording</default_value>
+          <default_value>sound recording-musical</default_value>
           <options>
-            <index key="Sound Recording">Sound Recording</index>
-            <index key="Sound Recording - Musical">Sound Recording - Musical</index>
-            <index key="Sound Recording - Nonmusical">Sound Recording - Nonmusical</index>
+            <index key="sound recording">sound recording</index>
+            <index key="sound recording-musical">sound recording-musical</index>
+            <index key="sound recording-nonmusical">sound recording-nonmusical</index>
           </options>
           <required>FALSE</required>
           <tree>TRUE</tree>
