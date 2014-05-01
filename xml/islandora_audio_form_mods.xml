@@ -251,11 +251,11 @@
         <properties>
           <type>select</type>
           <access>TRUE</access>
-          <default_value>Sound Recording</default_value>
+          <default_value>sound recording-musical</default_value>
           <options>
-            <index key="Sound Recording">Sound Recording</index>
-            <index key="Sound Recording - Musical">Sound Recording - Musical</index>
-            <index key="Sound Recording - Nonmusical">Sound Recording - Nonmusical</index>
+            <index key="sound recording">sound recording</index>
+            <index key="sound recording-musical">sound recording-musical</index>
+            <index key="sound recording-nonmusical">sound recording-nonmusical</index>
           </options>
           <required>FALSE</required>
           <tree>TRUE</tree>
@@ -315,8 +315,14 @@
         <properties>
           <type>select</type>
           <access>TRUE</access>
+          <collapsed>FALSE</collapsed>
+          <collapsible>FALSE</collapsible>
           <description>Vocabulary from http://special-cataloguing.com/node/1398 </description>
+          <disabled>FALSE</disabled>
+          <executes_submit_callback>FALSE</executes_submit_callback>
+          <multiple>FALSE</multiple>
           <options>
+            <index key=""/>
             <anthems>anthems</anthems>
             <ballets>ballets</ballets>
             <bluegrass>bluegrass</bluegrass>
@@ -384,6 +390,7 @@
             <index key="other forms">other forms</index>
           </options>
           <required>FALSE</required>
+          <resizable>FALSE</resizable>
           <title>Genre</title>
           <tree>TRUE</tree>
           <actions>
@@ -958,7 +965,13 @@
             <properties>
               <type>fieldset</type>
               <access>TRUE</access>
+              <collapsed>FALSE</collapsed>
+              <collapsible>FALSE</collapsible>
+              <disabled>FALSE</disabled>
+              <executes_submit_callback>FALSE</executes_submit_callback>
+              <multiple>FALSE</multiple>
               <required>FALSE</required>
+              <resizable>FALSE</resizable>
               <title>Geographic Information</title>
               <tree>TRUE</tree>
               <actions>
@@ -983,15 +996,23 @@
                 <properties>
                   <type>select</type>
                   <access>TRUE</access>
-                  <default_value>North America</default_value>
+                  <collapsed>FALSE</collapsed>
+                  <collapsible>FALSE</collapsible>
+                  <disabled>FALSE</disabled>
+                  <executes_submit_callback>FALSE</executes_submit_callback>
+                  <multiple>FALSE</multiple>
                   <options>
-                    <Asia>Asia</Asia>
+                    <index key=""/>
                     <Africa>Africa</Africa>
+                    <Antarctica>Antarctica</Antarctica>
+                    <Asia>Asia</Asia>
+                    <Australia>Australia</Australia>
                     <Europe>Europe</Europe>
                     <index key="North America">North America</index>
                     <index key="South America">South America</index>
                   </options>
                   <required>FALSE</required>
+                  <resizable>FALSE</resizable>
                   <title>Continent</title>
                   <tree>TRUE</tree>
                   <actions>
