@@ -35,13 +35,13 @@ function islandora_audio_islandora_required_objects(IslandoraTuque $connection) 
   // ISLANDORACM Datastream.
   $datastream = $audio_content_model->constructDatastream('ISLANDORACM', 'X');
   $datastream->label = 'Islandora content model';
-  $datastream->mimetype = 'text/xml';
+  $datastream->mimetype = 'application/xml';
   $datastream->setContentFromFile("$module_path/xml/islandora_audio_content_model.xml", FALSE);
   $audio_content_model->ingestDatastream($datastream);
   // DS-COMPOSITE-MODEL Datastream.
   $datastream = $audio_content_model->constructDatastream('DS-COMPOSITE-MODEL', 'X');
   $datastream->label = 'DS-COMPOSITE-MODEL';
-  $datastream->mimetype = 'text/xml';
+  $datastream->mimetype = 'application/xml';
   $datastream->setContentFromFile("$module_path/xml/islandora_audio_ds_composite_model.xml", FALSE);
   $audio_content_model->ingestDatastream($datastream);
   // Audio Collection.
@@ -53,7 +53,7 @@ function islandora_audio_islandora_required_objects(IslandoraTuque $connection) 
   // Collection Policy Datastream.
   $datastream = $audio_collection->constructDatastream('COLLECTION_POLICY', 'X');
   $datastream->label = 'Collection policy';
-  $datastream->mimetype = 'text/xml';
+  $datastream->mimetype = 'application/xml';
   $datastream->setContentFromFile("$module_path/xml/islandora_audio_collection_policy.xml", FALSE);
   $audio_collection->ingestDatastream($datastream);
   // TN Datastream.
