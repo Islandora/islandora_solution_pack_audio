@@ -32,12 +32,6 @@ function islandora_audio_islandora_required_objects(IslandoraTuque $connection) 
   $audio_content_model->owner = 'fedoraAdmin';
   $audio_content_model->label = 'Islandora Audio Content Model';
   $audio_content_model->models = 'fedora-system:ContentModel-3.0';
-  // ISLANDORACM Datastream.
-  $datastream = $audio_content_model->constructDatastream('ISLANDORACM', 'X');
-  $datastream->label = 'Islandora content model';
-  $datastream->mimetype = 'text/xml';
-  $datastream->setContentFromFile("$module_path/xml/islandora_audio_content_model.xml", FALSE);
-  $audio_content_model->ingestDatastream($datastream);
   // DS-COMPOSITE-MODEL Datastream.
   $datastream = $audio_content_model->constructDatastream('DS-COMPOSITE-MODEL', 'X');
   $datastream->label = 'DS-COMPOSITE-MODEL';
