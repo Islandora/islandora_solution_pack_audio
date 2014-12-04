@@ -24,9 +24,9 @@
     <form MIME="audio/mpeg"/>
   </dsTypeModel>
   <dsTypeModel ID="TN" optional="false">
-    <form MIME="image/jpg"/>
     <form MIME="image/jpeg"/>
     <form MIME="image/png"/>
+    <form MIME="image/gif"/>
   </dsTypeModel>
   <dsTypeModel ID="TECHMD">
     <form MIME="text/xml"/>
