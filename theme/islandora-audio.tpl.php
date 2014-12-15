@@ -10,6 +10,7 @@
 
 <div class="islandora-audio-object islandora" vocab="http://schema.org/" prefix="dcterms: http://purl.org/dc/terms/" typeof="AudioObject">
   <div class="islandora-audio-content-wrapper clearfix">
+    <?php print theme('islandora_solr_search_return_link'); ?>
     <?php if (isset($islandora_content)): ?>
       <div class="islandora-audio-content">
         <?php print $islandora_content; ?>
