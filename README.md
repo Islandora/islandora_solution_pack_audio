@@ -22,6 +22,11 @@ Set the path for `lame` and select a viewer in Administration » Islandora » Au
 
 ![Configuration](http://i.imgur.com/jx73lEK.png)
 
+Current viewers that can be configured include:
+
+* [Islandora JW Player](https://github.com/Islandora/islandora_jwplayer)
+* [Islandora Video.js](https://github.com/Islandora/islandora_videojs)
+
 ## Troubleshooting/Issues
 
 Having problems or solved a problem? Check out the Islandora google groups for a solution.
