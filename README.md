@@ -20,7 +20,7 @@ Install as usual, see [this](https://drupal.org/documentation/install/modules-th
 
 Set the path for `lame` and select a viewer in Administration » Islandora » Audio Collection (admin/islandora/audio).
 
-![Configuration](http://i.imgur.com/jx73lEK.png)
+![Configuration](https://camo.githubusercontent.com/97cad9681ab47b9e8c5dadde7970ce46f3ce2278/687474703a2f2f692e696d6775722e636f6d2f6a7837336c454b2e706e67)
 
 Current viewers that can be configured include:
 
