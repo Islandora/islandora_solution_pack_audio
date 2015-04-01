@@ -26,7 +26,7 @@ function islandora_audio_audio_upload_form(array $form, array &$form_state) {
       '#title' => t('Audio File'),
       '#type' => 'managed_file',
       '#required' => TRUE,
-      '#description' => t('Select a file to upload.<br/>Files must be less than <b>@size MB.</b><br/>Allowed file types: <b>@ext.</b>', array('@size' => $upload_size, '@ext' => $audio_extensions[0])),
+      '#description' => t('Select a file to upload.<br/>Files must be less than <strong>@size MB.</strong><br/>Allowed file types: <strong>@ext.</strong>', array('@size' => $upload_size, '@ext' => $audio_extensions[0])),
       '#default_value' => isset($form_state['values']['audio_file']) ? $form_state['values']['audio_file'] : NULL,
       '#upload_location' => 'temporary://',
       '#upload_validators' => array(
@@ -43,7 +43,7 @@ function islandora_audio_audio_upload_form(array $form, array &$form_state) {
       'thumbnail_file' => array(
         '#title' => t('Thumbnail File'),
         '#type' => 'managed_file',
-        '#description' => t('Select a file to upload.<br/>Files must be less than <b>@size MB.</b><br/>Allowed file types: <b>@ext.</b>', array('@size' => $upload_size, '@ext' => $thumbnail_extensions[0])),
+        '#description' => t('Select a file to upload.<br/>Files must be less than <strong>@size MB.</strong><br/>Allowed file types: <strong>@ext.</strong>', array('@size' => $upload_size, '@ext' => $thumbnail_extensions[0])),
         '#default_value' => isset($form_state['values']['thumbnail_file']) ? $form_state['values']['thumbnail_file'] : NULL,
         '#upload_location' => 'temporary://',
         '#upload_validators' => array(
