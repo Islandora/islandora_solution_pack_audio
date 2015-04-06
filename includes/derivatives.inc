@@ -114,7 +114,9 @@ function islandora_audio_add_datastream(AbstractObject $object, $datastream_id, 
     else {
       $ds = $object[$datastream_id];
     }
-    $ds->mimetype = $mime_detector->getMimetype($file_uri);
+    if ($ds->mimetype != $mime_detector->getMimetype($file_uri)) {
+      $ds->mimetype = $mime_detector->getMimetype($file_uri);
+    }
     $ds->setContentFromFile(drupal_realpath($file_uri));
     if ($ingest) {
       $object->ingestDatastream($ds);
