@@ -214,7 +214,17 @@ function islandora_audio_islandora_sp_audiocmodel_islandora_ingest_steps() {
  */
 function islandora_audio_islandora_sp_audiocmodel_islandora_derivative() {
   if (variable_get('islandora_lame_url', '/usr/bin/lame') === ISLANDORA_AUDIO_NO_TRIGGER_DERIVATIVE){
-    return array();
+    return array(
+      array(
+        'source_dsid' => NULL,
+        'destination_dsid' => 'TN',
+        'weight' => 1,
+        'function' => array(
+          'islandora_audio_create_thumbnail',
+        ),
+        'file' => drupal_get_path('module', 'islandora_audio') . '/includes/derivatives.inc',
+      ),
+    );
   }else{
     return array(
       array(
