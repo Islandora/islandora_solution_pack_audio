@@ -25,7 +25,6 @@ function islandora_audio_audio_upload_form(array $form, array &$form_state) {
     'audio_file' => array(
       '#title' => t('Audio File'),
       '#type' => 'managed_file',
-      '#required' => TRUE,
       '#description' => t('Select a file to upload.<br/>Files must be less than <strong>@size MB.</strong><br/>Allowed file types: <strong>@ext.</strong>', array('@size' => $upload_size, '@ext' => $audio_extensions[0])),
       '#default_value' => isset($form_state['values']['audio_file']) ? $form_state['values']['audio_file'] : NULL,
       '#upload_location' => 'temporary://',
@@ -94,20 +93,22 @@ function islandora_audio_audio_upload_form_submit(array $form, array &$form_stat
   module_load_include('inc', 'islandora', 'includes/utilities');
   $object = $form_state['islandora']['objects'][0];
 
-  if (empty($object['OBJ'])) {
-    $obj = $object->constructDatastream('OBJ', 'M');
-    $object->ingestDatastream($obj);
-  }
-  else {
-    $obj = $object['OBJ'];
-  }
-  $audio_file = file_load($form_state['values']['audio_file']);
-  $obj->setContentFromFile(drupal_realpath($audio_file->uri), FALSE);
-  if ($obj->label != $audio_file->filename) {
-    $obj->label = $audio_file->filename;
-  }
-  if ($obj->mimetype != $audio_file->filemime) {
-    $obj->mimetype = $audio_file->filemime;
+  if ($form_state['values']['audio_file']) {
+    if (empty($object['OBJ'])) {
+      $obj = $object->constructDatastream('OBJ', 'M');
+      $object->ingestDatastream($obj);
+    }
+    else {
+      $obj = $object['OBJ'];
+    }
+    $audio_file = file_load($form_state['values']['audio_file']);
+    $obj->setContentFromFile(drupal_realpath($audio_file->uri), FALSE);
+    if ($obj->label != $audio_file->filename) {
+      $obj->label = $audio_file->filename;
+    }
+    if ($obj->mimetype != $audio_file->filemime) {
+      $obj->mimetype = $audio_file->filemime;
+    }
   }
 
   if ($form_state['values']['supply_thumbnail']) {
