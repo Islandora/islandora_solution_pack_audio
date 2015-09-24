@@ -92,22 +92,23 @@ function islandora_audio_audio_upload_form_validate(array $form, array &$form_st
  */
 function islandora_audio_audio_upload_form_submit(array $form, array &$form_state) {
   module_load_include('inc', 'islandora', 'includes/utilities');
-  $object = $form_state['islandora']['objects'][0];
-
-  if (empty($object['OBJ'])) {
-    $obj = $object->constructDatastream('OBJ', 'M');
-    $object->ingestDatastream($obj);
-  }
-  else {
-    $obj = $object['OBJ'];
-  }
-  $audio_file = file_load($form_state['values']['audio_file']);
-  $obj->setContentFromFile(drupal_realpath($audio_file->uri), FALSE);
-  if ($obj->label != $audio_file->filename) {
-    $obj->label = $audio_file->filename;
-  }
-  if ($obj->mimetype != $audio_file->filemime) {
-    $obj->mimetype = $audio_file->filemime;
+  $objects = &islandora_ingest_form_get_objects($form_state);
+  foreach ($objects as $object) {
+    if (empty($object['OBJ'])) {
+      $obj = $object->constructDatastream('OBJ', 'M');
+      $object->ingestDatastream($obj);
+    }
+    else {
+      $obj = $object['OBJ'];
+    }
+    $audio_file = file_load($form_state['values']['audio_file']);
+    $obj->setContentFromFile(drupal_realpath($audio_file->uri), FALSE);
+    if ($obj->label != $audio_file->filename) {
+      $obj->label = $audio_file->filename;
+    }
+    if ($obj->mimetype != $audio_file->filemime) {
+      $obj->mimetype = $audio_file->filemime;
+    }
   }
 
   if ($form_state['values']['supply_thumbnail']) {
