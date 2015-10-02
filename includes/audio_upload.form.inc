@@ -92,8 +92,7 @@ function islandora_audio_audio_upload_form_validate(array $form, array &$form_st
  */
 function islandora_audio_audio_upload_form_submit(array $form, array &$form_state) {
   module_load_include('inc', 'islandora', 'includes/utilities');
-  $object = $form_state['islandora']['objects'][0];
-
+  $object = islandora_ingest_form_get_object($form_state);
   if (empty($object['OBJ'])) {
     $obj = $object->constructDatastream('OBJ', 'M');
     $object->ingestDatastream($obj);
