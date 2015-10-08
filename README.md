@@ -41,7 +41,7 @@ Having problems or solved a problem? Check out the Islandora google groups for a
 ## Maintainers/Sponsors
 Current maintainers:
 
-* [Alan Stanley](https://github.com/ajstanley)
+* [Rosemary Le Faive](https://github.com/rosiel)
 
 ## Development
 
