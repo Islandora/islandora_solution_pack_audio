@@ -35,6 +35,7 @@ function islandora_audio_create_mp3(AbstractObject $object, $force = FALSE) {
       );
     }
     else {
+      module_load_include('inc', 'islandora', 'includes/utilites');
       $mime_detect = new MimeDetect();
       $ext = $mime_detect->getExtension($object['OBJ']->mimeType);
       $file_name = str_replace(":", "-", $object->id) . ".OBJ.{$ext}";
