@@ -48,6 +48,10 @@ function islandora_audio_install() {
 function islandora_audio_uninstall() {
   module_load_include('inc', 'islandora', 'includes/solution_packs');
   islandora_install_solution_pack('islandora_audio', 'uninstall');
-  $variables = array('islandora_audio_viewers', 'islandora_lame_url');
+  $variables = array(
+    'islandora_audio_defer_derivatives_on_ingest',
+    'islandora_audio_viewers',
+    'islandora_lame_url',
+  );
   array_walk($variables, 'variable_del');
 }
