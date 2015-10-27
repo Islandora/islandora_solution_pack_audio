@@ -23,13 +23,20 @@ function islandora_audio_admin(array $form, array &$form_state) {
   };
   $lame = $get_default_value('islandora_lame_url', '/usr/bin/lame');
   $form = array(
+    'islandora_defer_audio_derivatives_on_ingest' => array(
+      '#type' => 'checkbox',
+      '#title' => t('Defer audio derivative generation during ingest'),
+      '#description' => t('Prevent audio derivatives from running during ingest,
+            useful if derivatives are to be created by an external service.'),
+      '#default_value' => variable_get('islandora_defer_audio_derivatives_on_ingest', FALSE),
+    ),
     'islandora_lame_url' => array(
       '#type' => 'textfield',
       '#title' => t("Path to LAME"),
       '#description' => t('!LAME is required to create derivatives files.<br/>!msg',
                       array(
                         '!LAME' => l(t('LAME'), 'http://lame.sourceforge.net/'),
-                        '!msg' =>  t("Put @no_deriv in the text field to indicate that derivatives should not be produced on ingest.<br/>", array('@no_deriv' => ISLANDORA_AUDIO_NO_TRIGGER_DERIVATIVE)).islandora_audio_admin_form_check_lame_for_no_derivative_message($lame),
+                        '!msg' =>  islandora_executable_available_message($lame),
                       )),
       '#default_value' => $lame,
       '#size' => 20,
@@ -46,24 +53,6 @@ function islandora_audio_admin(array $form, array &$form_state) {
   module_load_include('inc', 'islandora', 'includes/solution_packs');
   $form += islandora_viewers_form('islandora_audio_viewers', 'audio/mpeg');
   return system_settings_form($form);
-}
-
-/**
- * Determine the message to show to the user based on whether the path indicator
- * is set to not run the derivative
- *
- * @param string $path
- *   The absolute path to an executable to check for availability, or the special set indicating that a derivative should not be produced
- * 
- * @return string
- *   A message in html detailing if the given executable is accessible, or that the user indicated that a derviative should not be produced
- */
-function islandora_audio_admin_form_check_lame_for_no_derivative_message($lame){
-  if ($lame !== ISLANDORA_AUDIO_NO_TRIGGER_DERIVATIVE){
-    return islandora_executable_available_message($lame);
-  }else{
-    return t("Derivative creation will not be attempted.");
-  }
 }
 
 /**
