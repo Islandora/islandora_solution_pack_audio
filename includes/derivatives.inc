@@ -35,21 +35,28 @@ function islandora_audio_create_mp3(AbstractObject $object, $force = FALSE) {
       );
     }
     else {
+      module_load_include('inc', 'islandora', 'includes/utilites');
       $mime_detect = new MimeDetect();
       $ext = $mime_detect->getExtension($object['OBJ']->mimeType);
       $file_name = str_replace(":", "-", $object->id) . ".OBJ.{$ext}";
       $file_uri = file_create_filename($file_name, 'temporary://');
       $object['OBJ']->getContent($file_uri);
+      $temp_file = islandora_temp_file_entry($file_uri, $object['OBJ']->mimetype);
       $output = array();
       $file = drupal_realpath($file_uri);
-      $outfile = $file . '.mp3';
+      $out_uri = file_create_filename("$file_name.mp3", 'temporary://');
+      $outfile = drupal_realpath($out_uri);
       $lame_url = variable_get('islandora_lame_url', '/usr/bin/lame');
       $command = "$lame_url -V5 --vbr-new \"$file\" \"$outfile\"";
       $ret = FALSE;
       exec($command, $output, $ret);
+      file_delete($temp_file);
+      $temp_file = islandora_temp_file_entry($out_uri, 'audio/mpeg');
       // Successfully crafted the derivative.
       if ($ret == '0') {
-        return islandora_audio_add_datastream($object, 'PROXY_MP3', $outfile);
+        $to_return = islandora_audio_add_datastream($object, 'PROXY_MP3', $outfile);
+        file_delete($temp_file);
+        return $to_return;
       }
       // Failure.
       else {
