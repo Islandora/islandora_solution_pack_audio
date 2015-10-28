@@ -222,7 +222,8 @@ function islandora_audio_islandora_sp_audiocmodel_islandora_derivative() {
         'file' => drupal_get_path('module', 'islandora_audio') . '/includes/derivatives.inc',
       ),
     );
-  }else{
+  }
+  else {
     return array(
       array(
         'source_dsid' => 'OBJ',
