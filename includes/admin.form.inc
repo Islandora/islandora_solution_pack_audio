@@ -36,7 +36,7 @@ function islandora_audio_admin(array $form, array &$form_state) {
       '#description' => t('!LAME is required to create derivatives files.<br/>!msg',
                       array(
                         '!LAME' => l(t('LAME'), 'http://lame.sourceforge.net/'),
-                        '!msg' =>  islandora_executable_available_message($lame),
+                        '!msg' => islandora_executable_available_message($lame),
                       )),
       '#default_value' => $lame,
       '#size' => 20,
