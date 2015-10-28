@@ -18,7 +18,7 @@ function islandora_audio_requirements($phase) {
     $value = $t('Not Found');
     $description = $t('Islandora is not configured to process audio. Click <a href="http://lame.sourceforge.net/download.php">here</a> for installation instructions.');
     $severity = REQUIREMENT_WARNING;
-    if (variable_get('islandora_audio_defer_derivatives_on_ingest', FALSE)){
+    if (variable_get('islandora_audio_defer_derivatives_on_ingest', FALSE)) {
       $severity = REQUIREMENT_INFO;
     }
   }

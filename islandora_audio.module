@@ -210,7 +210,7 @@ function islandora_audio_islandora_sp_audiocmodel_islandora_ingest_steps() {
  * Implements hook_CMODEL_PID_islandora_derivative().
  */
 function islandora_audio_islandora_sp_audiocmodel_islandora_derivative() {
-  if (variable_get('islandora_audio_defer_derivatives_on_ingest', FALSE)){
+  if (variable_get('islandora_audio_defer_derivatives_on_ingest', FALSE)) {
     return array(
       array(
         'source_dsid' => NULL,
