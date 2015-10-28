@@ -223,26 +223,24 @@ function islandora_audio_islandora_sp_audiocmodel_islandora_derivative() {
       ),
     );
   }
-  else {
-    return array(
-      array(
-        'source_dsid' => 'OBJ',
-        'destination_dsid' => 'PROXY_MP3',
-        'weight' => '0',
-        'function' => array(
-          'islandora_audio_create_mp3',
-        ),
-        'file' => drupal_get_path('module', 'islandora_audio') . '/includes/derivatives.inc',
+  return array(
+    array(
+      'source_dsid' => 'OBJ',
+      'destination_dsid' => 'PROXY_MP3',
+      'weight' => '0',
+      'function' => array(
+        'islandora_audio_create_mp3',
       ),
-      array(
-        'source_dsid' => NULL,
-        'destination_dsid' => 'TN',
-        'weight' => 1,
-        'function' => array(
-          'islandora_audio_create_thumbnail',
-        ),
-        'file' => drupal_get_path('module', 'islandora_audio') . '/includes/derivatives.inc',
+      'file' => drupal_get_path('module', 'islandora_audio') . '/includes/derivatives.inc',
+    ),
+    array(
+      'source_dsid' => NULL,
+      'destination_dsid' => 'TN',
+      'weight' => 1,
+      'function' => array(
+        'islandora_audio_create_thumbnail',
       ),
-    );
-  }
+      'file' => drupal_get_path('module', 'islandora_audio') . '/includes/derivatives.inc',
+    ),
+  );
 }
