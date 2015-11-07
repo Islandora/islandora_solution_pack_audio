@@ -210,23 +210,20 @@ function islandora_audio_islandora_sp_audiocmodel_islandora_ingest_steps() {
  * Implements hook_CMODEL_PID_islandora_derivative().
  */
 function islandora_audio_islandora_sp_audiocmodel_islandora_derivative() {
-  $create_thumbnail_derivative = array(
-    'source_dsid' => NULL,
-    'destination_dsid' => 'TN',
-    'weight' => 1,
-    'function' => array(
-      'islandora_audio_create_thumbnail',
-    ),
-    'file' => drupal_get_path('module', 'islandora_audio') . '/includes/derivatives.inc',
-  );
-
-  if (variable_get('islandora_audio_defer_derivatives_on_ingest', FALSE)) {
-    return array(
-      $create_thumbnail_derivative,
-    );
-  }
-  return array(
+  $derivative_list = array(
     array(
+      'source_dsid' => NULL,
+      'destination_dsid' => 'TN',
+      'weight' => 1,
+      'function' => array(
+        'islandora_audio_create_thumbnail',
+      ),
+      'file' => drupal_get_path('module', 'islandora_audio') . '/includes/derivatives.inc',
+    ),
+  );
+  
+  if (!variable_get('islandora_audio_defer_derivatives_on_ingest', FALSE)) {
+    $derivative_list[] = array(
       'source_dsid' => 'OBJ',
       'destination_dsid' => 'PROXY_MP3',
       'weight' => '0',
@@ -234,7 +231,7 @@ function islandora_audio_islandora_sp_audiocmodel_islandora_derivative() {
         'islandora_audio_create_mp3',
       ),
       'file' => drupal_get_path('module', 'islandora_audio') . '/includes/derivatives.inc',
-    ),
-    $create_thumbnail_derivative,
-  );
+    );
+  }
+  return $derivative_list;
 }
