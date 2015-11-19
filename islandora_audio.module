@@ -180,7 +180,7 @@ function islandora_audio_preprocess_islandora_audio(array &$variables) {
       "url" => $audio_url,
       "mime" => 'audio/mpeg',
     );
-    
+
     module_load_include('inc', 'islandora', 'includes/solution_packs');
     $viewer = islandora_get_viewer($audio_params, 'islandora_audio_viewers', $islandora_object);
 
@@ -193,7 +193,7 @@ function islandora_audio_preprocess_islandora_audio(array &$variables) {
     else {
       $variables['islandora_content'] = l($islandora_object->label, $audio_url);
     }
-  } 
+  }
 }
 
 /**
