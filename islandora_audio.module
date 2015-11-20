@@ -169,7 +169,7 @@ function islandora_audio_preprocess_islandora_audio(array &$variables) {
   // Determine whether to attempt to use the OBJ or PROXY_MP3.
   module_load_include('inc', 'islandora_audio', 'includes/utilities');
   $dsid = !isset($islandora_object['PROXY_MP3']) &&
-    variable_get('islandora_audio_obj_fallback', FALSE) &&
+    variable_get('islandora_audio_obj_fallback', TRUE) &&
     isset($islandora_object['OBJ']) &&
     islandora_audio_datastream_valid_for_playback($islandora_object['OBJ']) ? 'OBJ' : 'PROXY_MP3';
 
