@@ -20,11 +20,13 @@ function islandora_audio_audio_upload_form(array $form, array &$form_state) {
   $upload_size = min((int) ini_get('post_max_size'), (int) ini_get('upload_max_filesize'));
   $audio_extensions = array('wav mp3');
   $thumbnail_extensions = array('gif jpg png jpeg');
+  $upload_required = variable_get('islandora_require_obj_upload', True);
 
   return array(
     'audio_file' => array(
       '#title' => t('Audio File'),
       '#type' => 'managed_file',
+      '#required' => $upload_required,
       '#description' => t('Select a file to upload.<br/>Files must be less than <strong>@size MB.</strong><br/>Allowed file types: <strong>@ext.</strong>', array('@size' => $upload_size, '@ext' => $audio_extensions[0])),
       '#default_value' => isset($form_state['values']['audio_file']) ? $form_state['values']['audio_file'] : NULL,
       '#upload_location' => 'temporary://',
