@@ -150,8 +150,6 @@ function islandora_audio_preprocess_islandora_audio(array &$variables) {
   // Start getting parameters for the player...
   $audio_params = array(
     "pid" => $islandora_object->id,
-    "url" => '',
-    "mime" => '',
   );
   // Thumbnail.
   if (isset($islandora_object['TN']) && islandora_datastream_access(ISLANDORA_VIEW_OBJECTS, $islandora_object['TN'])) {
