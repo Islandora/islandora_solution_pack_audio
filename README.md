@@ -20,7 +20,9 @@ Install as usual, see [this](https://drupal.org/documentation/install/modules-th
 
 Set the path for `lame` and select a viewer in Administration » Islandora » Audio Collection (admin/islandora/audio).
 
-![Configuration](https://camo.githubusercontent.com/97cad9681ab47b9e8c5dadde7970ce46f3ce2278/687474703a2f2f692e696d6775722e636f6d2f6a7837336c454b2e706e67)
+An option also exists to fall back to the OBJ datastream in viewers if the PROXY_MP3 datastream doesn't exist and the OBJ can be played.
+
+![Configuration](https://cloud.githubusercontent.com/assets/3406327/11278393/1f340714-8ec1-11e5-8d08-3bce15529b42.png)
 
 Current viewers that can be configured include:
 

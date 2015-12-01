@@ -42,6 +42,12 @@ function islandora_audio_admin(array $form, array &$form_state) {
         'event' => 'change',
       ),
     ),
+    'islandora_audio_obj_fallback' => array(
+      '#type' => 'checkbox',
+      '#title' => t('Use OBJ As Fallback'),
+      '#description' => t('Optionally attempt to fall back to the OBJ datastream for playback if the PROXY_MP3 is not present.'),
+      '#default_value' => $get_default_value('islandora_audio_obj_fallback', TRUE),
+    ),
   );
   module_load_include('inc', 'islandora', 'includes/solution_packs');
   $form += islandora_viewers_form('islandora_audio_viewers', 'audio/mpeg');
