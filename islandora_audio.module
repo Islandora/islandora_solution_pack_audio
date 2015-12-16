@@ -166,28 +166,33 @@ function islandora_audio_preprocess_islandora_audio(array &$variables) {
   }
 
   // Audio player.
-  if (isset($islandora_object['PROXY_MP3']) && islandora_datastream_access(ISLANDORA_VIEW_OBJECTS, $islandora_object['PROXY_MP3'])) {
-    $audio_url = url("islandora/object/{$islandora_object->id}/datastream/PROXY_MP3", array('absolute' => TRUE));
+  // Determine whether to attempt to use the OBJ or PROXY_MP3.
+  module_load_include('inc', 'islandora_audio', 'includes/utilities');
+  $dsid = !isset($islandora_object['PROXY_MP3']) &&
+    variable_get('islandora_audio_obj_fallback', TRUE) &&
+    isset($islandora_object['OBJ']) &&
+    islandora_audio_datastream_valid_for_playback($islandora_object['OBJ']) ? 'OBJ' : 'PROXY_MP3';
+
+  if (islandora_datastream_access(ISLANDORA_VIEW_OBJECTS, $islandora_object[$dsid])) {
+    $audio_url = url("islandora/object/{$islandora_object->id}/datastream/$dsid", array('absolute' => TRUE));
 
     $audio_params += array(
       "url" => $audio_url,
       "mime" => 'audio/mpeg',
     );
-  }
 
-  module_load_include('inc', 'islandora', 'includes/solution_packs');
-  $viewer = islandora_get_viewer($audio_params, 'islandora_audio_viewers', $islandora_object);
+    module_load_include('inc', 'islandora', 'includes/solution_packs');
+    $viewer = islandora_get_viewer($audio_params, 'islandora_audio_viewers', $islandora_object);
 
-  if ($viewer) {
-    $variables['islandora_content'] = $viewer;
-  }
-  elseif (isset($variables['islandora_thumbnail_img']) && isset($islandora_object['PROXY_MP3']) &&
-    islandora_datastream_access(ISLANDORA_VIEW_OBJECTS, $islandora_object['PROXY_MP3'])) {
-
-    $variables['islandora_content'] = l($variables['islandora_thumbnail_img'], $audio_url, array('html' => TRUE));
-  }
-  elseif (isset($islandora_object['PROXY_MP3']) && islandora_datastream_access(ISLANDORA_VIEW_OBJECTS, $islandora_object['PROXY_MP3'])) {
-    $variables['islandora_content'] = l($islandora_object->label, $audio_url);
+    if ($viewer) {
+      $variables['islandora_content'] = $viewer;
+    }
+    elseif (isset($variables['islandora_thumbnail_img'])) {
+      $variables['islandora_content'] = l($variables['islandora_thumbnail_img'], $audio_url, array('html' => TRUE));
+    }
+    else {
+      $variables['islandora_content'] = l($islandora_object->label, $audio_url);
+    }
   }
 }
 

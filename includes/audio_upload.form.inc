@@ -20,12 +20,13 @@ function islandora_audio_audio_upload_form(array $form, array &$form_state) {
   $upload_size = min((int) ini_get('post_max_size'), (int) ini_get('upload_max_filesize'));
   $audio_extensions = array('wav mp3');
   $thumbnail_extensions = array('gif jpg png jpeg');
+  $upload_required = variable_get('islandora_require_obj_upload', TRUE);
 
   return array(
     'audio_file' => array(
       '#title' => t('Audio File'),
       '#type' => 'managed_file',
-      '#required' => TRUE,
+      '#required' => $upload_required,
       '#description' => t('Select a file to upload.<br/>Files must be less than <strong>@size MB.</strong><br/>Allowed file types: <strong>@ext.</strong>', array('@size' => $upload_size, '@ext' => $audio_extensions[0])),
       '#default_value' => isset($form_state['values']['audio_file']) ? $form_state['values']['audio_file'] : NULL,
       '#upload_location' => 'temporary://',
@@ -93,22 +94,23 @@ function islandora_audio_audio_upload_form_validate(array $form, array &$form_st
 function islandora_audio_audio_upload_form_submit(array $form, array &$form_state) {
   module_load_include('inc', 'islandora', 'includes/utilities');
   $object = islandora_ingest_form_get_object($form_state);
-  if (empty($object['OBJ'])) {
-    $obj = $object->constructDatastream('OBJ', 'M');
-    $object->ingestDatastream($obj);
+  if ($form_state['values']['audio_file']) {
+    if (empty($object['OBJ'])) {
+      $obj = $object->constructDatastream('OBJ', 'M');
+      $object->ingestDatastream($obj);
+    }
+    else {
+      $obj = $object['OBJ'];
+    }
+    $audio_file = file_load($form_state['values']['audio_file']);
+    $obj->setContentFromFile(drupal_realpath($audio_file->uri), FALSE);
+    if ($obj->label != $audio_file->filename) {
+      $obj->label = $audio_file->filename;
+    }
+    if ($obj->mimetype != $audio_file->filemime) {
+      $obj->mimetype = $audio_file->filemime;
+    }
   }
-  else {
-    $obj = $object['OBJ'];
-  }
-  $audio_file = file_load($form_state['values']['audio_file']);
-  $obj->setContentFromFile(drupal_realpath($audio_file->uri), FALSE);
-  if ($obj->label != $audio_file->filename) {
-    $obj->label = $audio_file->filename;
-  }
-  if ($obj->mimetype != $audio_file->filemime) {
-    $obj->mimetype = $audio_file->filemime;
-  }
-
   if ($form_state['values']['supply_thumbnail']) {
     $thumbnail_file = file_load($form_state['values']['thumbnail_file']);
     if ($form_state['values']['scale_thumbnail']) {

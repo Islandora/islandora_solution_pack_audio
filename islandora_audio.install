@@ -50,6 +50,7 @@ function islandora_audio_uninstall() {
     'islandora_audio_defer_derivatives_on_ingest',
     'islandora_audio_viewers',
     'islandora_lame_url',
+    'islandora_audio_obj_fallback',
   );
   array_walk($variables, 'variable_del');
 }
