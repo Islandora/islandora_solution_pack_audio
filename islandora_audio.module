@@ -215,16 +215,7 @@ function islandora_audio_islandora_sp_audiocmodel_islandora_ingest_steps() {
  * Implements hook_CMODEL_PID_islandora_derivative().
  */
 function islandora_audio_islandora_sp_audiocmodel_islandora_derivative() {
-  return array(
-    array(
-      'source_dsid' => 'OBJ',
-      'destination_dsid' => 'PROXY_MP3',
-      'weight' => '0',
-      'function' => array(
-        'islandora_audio_create_mp3',
-      ),
-      'file' => drupal_get_path('module', 'islandora_audio') . '/includes/derivatives.inc',
-    ),
+  $derivative_list = array(
     array(
       'source_dsid' => NULL,
       'destination_dsid' => 'TN',
@@ -235,4 +226,16 @@ function islandora_audio_islandora_sp_audiocmodel_islandora_derivative() {
       'file' => drupal_get_path('module', 'islandora_audio') . '/includes/derivatives.inc',
     ),
   );
+  if (!variable_get('islandora_audio_defer_derivatives_on_ingest', FALSE)) {
+    $derivative_list[] = array(
+      'source_dsid' => 'OBJ',
+      'destination_dsid' => 'PROXY_MP3',
+      'weight' => '0',
+      'function' => array(
+        'islandora_audio_create_mp3',
+      ),
+      'file' => drupal_get_path('module', 'islandora_audio') . '/includes/derivatives.inc',
+    );
+  }
+  return $derivative_list;
 }

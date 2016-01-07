@@ -23,6 +23,13 @@ function islandora_audio_admin(array $form, array &$form_state) {
   };
   $lame = $get_default_value('islandora_lame_url', '/usr/bin/lame');
   $form = array(
+    'islandora_audio_defer_derivatives_on_ingest' => array(
+      '#type' => 'checkbox',
+      '#title' => t('Defer audio derivative generation during ingest'),
+      '#description' => t('Prevent audio derivatives from running during ingest,
+            useful if derivatives are to be created by an external service.'),
+      '#default_value' => variable_get('islandora_audio_defer_derivatives_on_ingest', FALSE),
+    ),
     'islandora_lame_url' => array(
       '#type' => 'textfield',
       '#title' => t("Path to LAME"),

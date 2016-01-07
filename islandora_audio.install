@@ -16,8 +16,11 @@ function islandora_audio_requirements($phase) {
   $severity = REQUIREMENT_OK;
   if (!is_executable($lame)) {
     $value = $t('Not Found');
-    $description = $t('Islandora will not be able to process audio. Click <a href="http://lame.sourceforge.net/download.php">here</a> for installation instructions.');
+    $description = $t('Islandora is not configured to process audio. Click <a href="http://lame.sourceforge.net/download.php">here</a> for installation instructions.');
     $severity = REQUIREMENT_WARNING;
+    if (variable_get('islandora_audio_defer_derivatives_on_ingest', FALSE)) {
+      $severity = REQUIREMENT_INFO;
+    }
   }
   return array(
     array(
@@ -44,6 +47,7 @@ function islandora_audio_uninstall() {
   module_load_include('inc', 'islandora', 'includes/solution_packs');
   islandora_install_solution_pack('islandora_audio', 'uninstall');
   $variables = array(
+    'islandora_audio_defer_derivatives_on_ingest',
     'islandora_audio_viewers',
     'islandora_lame_url',
     'islandora_audio_obj_fallback',
