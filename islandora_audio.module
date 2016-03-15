@@ -76,9 +76,9 @@ function islandora_audio_islandora_sp_audioCModel_islandora_view_object($object,
 }
 
 /**
- * Implements hook_islandora_xml_form_builder_forms().
+ * Implements hook_xml_form_builder_forms().
  */
-function islandora_audio_islandora_xml_form_builder_forms() {
+function islandora_audio_xml_form_builder_forms() {
   $module_path = drupal_get_path('module', 'islandora_audio');
   return array(
     'Audio MODS form' => array(
@@ -88,9 +88,9 @@ function islandora_audio_islandora_xml_form_builder_forms() {
 }
 
 /**
- * Implements hook_islandora_xml_form_builder_form_associations().
+ * Implements hook_xml_form_builder_form_associations().
  */
-function islandora_audio_islandora_xml_form_builder_form_associations() {
+function islandora_audio_xml_form_builder_form_associations() {
   return array(
     'islandora_audio_mods_form' => array(
       'content_model' => 'islandora:sp-audioCModel',
