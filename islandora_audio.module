@@ -76,6 +76,38 @@ function islandora_audio_islandora_sp_audioCModel_islandora_view_object($object,
 }
 
 /**
+ * Implements hook_islandora_xml_form_builder_forms().
+ */
+function islandora_audio_islandora_xml_form_builder_forms() {
+  $message = islandora_deprecated('7.x-1.8', t('Use xml_form_builder_forms instead.') );
+  trigger_error(filter_xss($message), E_USER_DEPRECATED);
+  $module_path = drupal_get_path('module', 'islandora_audio');
+  return array(
+    'Audio MODS form' => array(
+      'form_file' => "$module_path/xml/islandora_audio_form_mods.xml",
+    ),
+  );
+}
+
+/**
+ * Implements hook_islandora_xml_form_builder_form_associations().
+ */
+function islandora_audio_islandora_xml_form_builder_form_associations() {
+  $message = islandora_deprecated('7.x-1.8', t('Use xml_form_builder_form_associations instead.') );
+  trigger_error(filter_xss($message), E_USER_DEPRECATED);
+  return array(
+    'islandora_audio_mods_form' => array(
+      'content_model' => 'islandora:sp-audioCModel',
+      'form_name' => 'Audio MODS form',
+      'dsid' => 'MODS',
+      'title_field' => array('titleInfo', 'title'),
+      'transform' => 'mods_to_dc.xsl',
+      'template' => FALSE,
+    ),
+  );
+}
+
+/**
  * Implements hook_xml_form_builder_forms().
  */
 function islandora_audio_xml_form_builder_forms() {
