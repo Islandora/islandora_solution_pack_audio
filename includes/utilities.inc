@@ -15,7 +15,8 @@
  *   TRUE if the datastream can be played; FALSE otherwise.
  */
 function islandora_audio_datastream_valid_for_playback(AbstractDatastream $datastream) {
-  if ($datastream->mimetype == 'audio/mpeg' || $datastream->mimetype == 'audio/mp4') {
+  $valid_mime_types = array('audio/mpeg', 'audio/mp4', 'audio/mp3');
+  if (in_array($datastream->mimetype, $valid_mime_types)) {
     return TRUE;
   }
   // @TODO: This is currently a simple check against types supported by all
