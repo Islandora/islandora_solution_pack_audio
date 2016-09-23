@@ -49,6 +49,15 @@ function islandora_audio_admin(array $form, array &$form_state) {
         'event' => 'change',
       ),
     ),
+    'islandora_audio_vbr_quality' => array(
+      '#type' => 'textfield',
+      '#title' => t('MP3 derivative quality'),
+      '#description' => t('Variable Bit Rate quality setting (0=highest quality, 9.999=lowest). Default = 5.'),
+      '#size' => 5,
+      '#default_value' => variable_get('islandora_audio_vbr_quality', 5),
+      '#element_validate' => array('element_validate_number', 'islandora_audio_vbr_quality_validate'),
+
+    ),
     'islandora_audio_obj_fallback' => array(
       '#type' => 'checkbox',
       '#title' => t('Use OBJ As Fallback'),
@@ -74,4 +83,24 @@ function islandora_audio_admin(array $form, array &$form_state) {
  */
 function islandora_audio_admin_form_lame_ajax_callback(array $form, array $form_state) {
   return $form['islandora_lame_url'];
+}
+
+/**
+ * Validation callback for the VBR Quality field.
+ *
+ * @param array $element
+ *   The Drupal element definition.
+ * @param array $form_state
+ *   The Drupal form state.
+ */
+function islandora_audio_vbr_quality_validate(array $element, array &$form_state) {
+  if (!empty($element['#value'])) {
+    if ($element['#value'] < 0 || $element['#value'] > 9.99) {
+      form_error($element, t('Please enter a VBR quality value between 0 and 9.999.'));
+    }
+  }
+  else {
+    form_set_value($element, 5, $form_state);
+  }
+
 }

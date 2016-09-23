@@ -47,7 +47,8 @@ function islandora_audio_create_mp3(AbstractObject $object, $force = FALSE) {
       $out_uri = file_create_filename("$file_name.mp3", 'temporary://');
       $outfile = drupal_realpath($out_uri);
       $lame_url = variable_get('islandora_lame_url', '/usr/bin/lame');
-      $command = "$lame_url -V5 --vbr-new \"$file\" \"$outfile\"";
+      $vbr_quality = variable_get('islandora_audio_vbr_quality', 5);
+      $command = "$lame_url -V$vbr_quality --vbr-new \"$file\" \"$outfile\"";
       $ret = FALSE;
       exec($command, $output, $ret);
       file_delete($temp_file);
