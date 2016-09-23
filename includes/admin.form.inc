@@ -22,7 +22,13 @@ function islandora_audio_admin(array $form, array &$form_state) {
     return isset($form_state['values'][$name]) ? $form_state['values'][$name] : variable_get($name, $default);
   };
   $lame = $get_default_value('islandora_lame_url', '/usr/bin/lame');
-  $form = array(
+  $form['derivatives'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Derivatives'),
+    '#collapsible' => FALSE,
+    '#collapsed' => FALSE,
+  );
+  $form['derivatives'] += array(
     'islandora_audio_defer_derivatives_on_ingest' => array(
       '#type' => 'checkbox',
       '#title' => t('Defer audio derivative generation during ingest'),
