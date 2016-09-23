@@ -18,16 +18,36 @@ Install as usual, see [this](https://drupal.org/documentation/install/modules-th
 
 ## Configuration
 
-Set the path for `lame` and select a viewer in Administration » Islandora » Audio Collection (admin/islandora/audio).
+### Derivative Configuration
 
-An option also exists to fall back to the OBJ datastream in viewers if the PROXY_MP3 datastream doesn't exist and the OBJ can be played.
+A set of options exist for configuring derivatives for audio objects. 
 
-![Configuration](https://cloud.githubusercontent.com/assets/3406327/11278393/1f340714-8ec1-11e5-8d08-3bce15529b42.png)
+* Defer (do not create) derivatives for audio objects during ingest. You may
+find this useful if derivatives are being created by an external service,
+or if they are not required. This is specific to audio objects, but if 
+derivatives are deferred for all Islandora objects (an option under 
+admin/islandora/configure) then audio derivatives will not be created 
+regardless of how this option is set.
+* Set the path for `lame`. MP3 derivatives are created using the `lame` 
+command which must be installed as described above.
+* MP3 derivative quality can be configured if high-quality (or low-size)
+ derivatives are desired. Note that numbers closer to 0 will result in 
+ larger, higher-quality audio files.
+* Use original file as fallback will allow the OBJ to be played in a 
+player if a derivative cannot be found, and the original file is a 
+format that can be played. This, in conjunction with defering audio 
+derivatives, may save space in the repository and improve playback 
+quality if, for example, you are ingesting a collection of MP3 files. 
+ 
+ ### Viewer Configuration
 
-Current viewers that can be configured include:
+Select the desired viewer for audio objects. Current viewers that can 
+be configured include:
 
 * [Islandora JW Player](https://github.com/Islandora/islandora_jwplayer)
 * [Islandora Video.js](https://github.com/Islandora/islandora_videojs)
+
+![Configuration](https://cloud.githubusercontent.com/assets/1943338/18790120/f6c2d16e-8183-11e6-8f6c-c2957b35311a.png)
 
 ## Documentation
 

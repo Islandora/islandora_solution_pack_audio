@@ -66,8 +66,8 @@ function islandora_audio_admin(array $form, array &$form_state) {
     ),
     'islandora_audio_obj_fallback' => array(
       '#type' => 'checkbox',
-      '#title' => t('Use OBJ As Fallback'),
-      '#description' => t('Optionally attempt to fall back to the OBJ datastream for playback if the PROXY_MP3 is not present.'),
+      '#title' => t('Use original file as fallback'),
+      '#description' => t('Attempt to play the OBJ datastream in the player if the PROXY_MP3 derivative is not present.'),
       '#default_value' => $get_default_value('islandora_audio_obj_fallback', TRUE),
     ),
   );
