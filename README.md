@@ -22,7 +22,7 @@ Set the path for `lame` and select a viewer in Administration » Islandora » Au
 
 An option also exists to fall back to the OBJ datastream in viewers if the PROXY_MP3 datastream doesn't exist and the OBJ can be played.
 
-![Configuration](https://cloud.githubusercontent.com/assets/3406327/11278393/1f340714-8ec1-11e5-8d08-3bce15529b42.png)
+![image](https://cloud.githubusercontent.com/assets/12414721/18889603/aace7ee8-84cb-11e6-92c4-33bccb009d7f.png)
 
 Current viewers that can be configured include:
 
