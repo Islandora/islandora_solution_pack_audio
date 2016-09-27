@@ -47,7 +47,7 @@ be configured include:
 * [Islandora JW Player](https://github.com/Islandora/islandora_jwplayer)
 * [Islandora Video.js](https://github.com/Islandora/islandora_videojs)
 
-![Configuration](https://cloud.githubusercontent.com/assets/1943338/18790120/f6c2d16e-8183-11e6-8f6c-c2957b35311a.png)
+![Configuration](https://cloud.githubusercontent.com/assets/1943338/18892256/42a78df0-84df-11e6-8e51-6b67c1a8c81a.png)
 
 ## Documentation
 
