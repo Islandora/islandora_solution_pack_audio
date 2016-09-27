@@ -100,8 +100,12 @@ function islandora_audio_admin_form_lame_ajax_callback(array $form, array $form_
  *   The Drupal form state.
  */
 function islandora_audio_vbr_quality_validate(array $element, array &$form_state) {
-  if (!empty($element['#value'])) {
-    if ($element['#value'] < 0 || $element['#value'] > 9.999) {
+  if (!empty($element['#value']) || $element['#value'] === "0") {
+    $quality = floatval($element['#value']);
+    if ($quality >= 0 && $quality <= 9.999) {
+      return;
+    }
+    else {
       form_error($element, t('Please enter a VBR quality value between 0 and 9.999.'));
     }
   }
