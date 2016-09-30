@@ -51,6 +51,7 @@ function islandora_audio_uninstall() {
     'islandora_audio_viewers',
     'islandora_lame_url',
     'islandora_audio_obj_fallback',
+    'islandora_audio_vbr_quality',
   );
   array_walk($variables, 'variable_del');
 }
