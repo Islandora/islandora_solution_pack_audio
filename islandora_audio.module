@@ -12,7 +12,7 @@ function islandora_audio_menu() {
   return array(
     'admin/islandora/solution_pack_config/audio' => array(
       'title' => 'Audio Solution Pack',
-      'description' => 'Select player.',
+      'description' => 'Configure audio derivatives and select player.',
       'page callback' => 'drupal_get_form',
       'access arguments' => array('administer site configuration'),
       'page arguments' => array('islandora_audio_admin'),

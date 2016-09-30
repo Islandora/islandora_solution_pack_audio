@@ -22,7 +22,13 @@ function islandora_audio_admin(array $form, array &$form_state) {
     return isset($form_state['values'][$name]) ? $form_state['values'][$name] : variable_get($name, $default);
   };
   $lame = $get_default_value('islandora_lame_url', '/usr/bin/lame');
-  $form = array(
+  $form['derivatives'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Derivatives'),
+    '#collapsible' => FALSE,
+    '#collapsed' => FALSE,
+  );
+  $form['derivatives'] += array(
     'islandora_audio_defer_derivatives_on_ingest' => array(
       '#type' => 'checkbox',
       '#title' => t('Defer audio derivative generation during ingest'),
@@ -49,10 +55,19 @@ function islandora_audio_admin(array $form, array &$form_state) {
         'event' => 'change',
       ),
     ),
+    'islandora_audio_vbr_quality' => array(
+      '#type' => 'textfield',
+      '#title' => t('MP3 derivative quality'),
+      '#description' => t('Variable Bit Rate quality setting (0=highest quality, 9.999=lowest). Default = 5.'),
+      '#size' => 5,
+      '#default_value' => variable_get('islandora_audio_vbr_quality', 5),
+      '#element_validate' => array('element_validate_number', 'islandora_audio_vbr_quality_validate'),
+
+    ),
     'islandora_audio_obj_fallback' => array(
       '#type' => 'checkbox',
-      '#title' => t('Use OBJ As Fallback'),
-      '#description' => t('Optionally attempt to fall back to the OBJ datastream for playback if the PROXY_MP3 is not present.'),
+      '#title' => t('Use original file as fallback'),
+      '#description' => t('Attempt to play the OBJ datastream in the player if the PROXY_MP3 derivative is not present.'),
       '#default_value' => $get_default_value('islandora_audio_obj_fallback', TRUE),
     ),
   );
@@ -74,4 +89,28 @@ function islandora_audio_admin(array $form, array &$form_state) {
  */
 function islandora_audio_admin_form_lame_ajax_callback(array $form, array $form_state) {
   return $form['islandora_lame_url'];
+}
+
+/**
+ * Validation callback for the VBR Quality field.
+ *
+ * @param array $element
+ *   The Drupal element definition.
+ * @param array $form_state
+ *   The Drupal form state.
+ */
+function islandora_audio_vbr_quality_validate(array $element, array &$form_state) {
+  if (!empty($element['#value']) || $element['#value'] === "0") {
+    $quality = floatval($element['#value']);
+    if ($quality >= 0 && $quality <= 9.999) {
+      return;
+    }
+    else {
+      form_error($element, t('Please enter a VBR quality value between 0 and 9.999.'));
+    }
+  }
+  else {
+    form_set_value($element, 5, $form_state);
+  }
+
 }
