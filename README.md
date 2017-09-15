@@ -63,7 +63,7 @@ Having problems or solved a problem? Check out the Islandora google groups for a
 ## Maintainers/Sponsors
 Current maintainers:
 
-* [Rosemary Le Faive](https://github.com/rosiel)
+* [William Panting](https://github.com/willtp87)
 
 ## Development
 
