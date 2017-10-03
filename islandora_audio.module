@@ -239,3 +239,14 @@ function islandora_audio_islandora_sp_audiocmodel_islandora_derivative() {
   }
   return $derivative_list;
 }
+
+/**
+ * Implements hook_file_mimetype_mapping_alter().
+ */
+function islandora_audio_file_mimetype_mapping_alter(&$mapping) {
+  // Make sure the mapping is sensible for audio/mpeg by removing
+  // it from array and adding it to end so it has priority.
+  $code = $mapping['extensions']['mp3'];
+  unset($mapping['extensions']['mp3']);
+  $mapping['extensions']['mp3'] = $code;
+}
