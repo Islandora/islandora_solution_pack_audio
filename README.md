@@ -41,10 +41,9 @@ quality if, for example, you are ingesting a collection of MP3 files.
  
  ### Viewer Configuration
 
-Select the desired viewer for audio objects. Current viewers that can 
-be configured include:
+Select the desired viewer for audio objects. Current viewer that can 
+be configured is:
 
-* [Islandora JW Player](https://github.com/Islandora/islandora_jwplayer)
 * [Islandora Video.js](https://github.com/Islandora/islandora_videojs)
 
 ![Configuration](https://cloud.githubusercontent.com/assets/1943338/18892256/42a78df0-84df-11e6-8e51-6b67c1a8c81a.png)
@@ -63,7 +62,7 @@ Having problems or solved a problem? Check out the Islandora google groups for a
 ## Maintainers/Sponsors
 Current maintainers:
 
-* [William Panting](https://github.com/willtp87)
+* [Jonathan Green](https://github.com/jonathangreen)
 
 ## Development
 
