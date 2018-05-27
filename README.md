@@ -46,7 +46,8 @@ be configured is:
 
 * [Islandora Video.js](https://github.com/Islandora/islandora_videojs)
 
-![Configuration](https://cloud.githubusercontent.com/assets/1943338/18892256/42a78df0-84df-11e6-8e51-6b67c1a8c81a.png)
+![Configuration](https://user-images.githubusercontent.com/2857697/40197085-0088f830-59d8-11e8-8fc1-abbe84957679.jpg)
+
 
 ## Documentation
 
