@@ -5,6 +5,9 @@
  * Attempts to ingest an audio file into a randomly generated audio collection.
  */
 
+/**
+ * Ingest webtestcase for audio solution pack.
+ */
 class IslandoraAudioIngestTestCase extends IslandoraCollectionWebTestCase {
 
   /**
@@ -82,4 +85,5 @@ class IslandoraAudioIngestTestCase extends IslandoraCollectionWebTestCase {
     $this->deleteObject($object->id);
     $this->deleteTestCollection($collectionpid);
   }
+
 }

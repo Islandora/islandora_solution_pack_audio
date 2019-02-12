@@ -10,7 +10,6 @@
  *
  * @param AbstractObject $object
  *   An AbstractObject representing an object in Fedora.
- *
  * @param bool $force
  *   Whether the derivative generation is being forced.
  *
@@ -82,7 +81,6 @@ function islandora_audio_create_mp3(AbstractObject $object, $force = FALSE) {
  *
  * @param AbstractObject $object
  *   An AbstractObject representing an object in Fedora.
- *
  * @param bool $force
  *   Whether the derivative generation is being forced.
  *
