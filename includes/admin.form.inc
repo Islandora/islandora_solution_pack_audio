@@ -18,7 +18,7 @@
  */
 function islandora_audio_admin(array $form, array &$form_state) {
   module_load_include('inc', 'islandora', 'includes/utilities');
-  $get_default_value = function($name, $default) use(&$form_state) {
+  $get_default_value = function ($name, $default) use (&$form_state) {
     return isset($form_state['values'][$name]) ? $form_state['values'][$name] : variable_get($name, $default);
   };
   $lame = $get_default_value('islandora_lame_url', '/usr/bin/lame');

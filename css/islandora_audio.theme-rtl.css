@@ -1,4 +1,4 @@
-/* 
+/*
     Document   : islandora_basic_collection.theme-rtl
     Created on : May 23, 2012, 11:23:56 AM
     Description:
@@ -15,5 +15,5 @@
   body.no-sidebars .islandora-basic-image-sidebar {
     float: left; /* LTR */
   }
-  
+
 }
